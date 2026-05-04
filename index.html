@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Thêm thư viện Chart.js để vẽ biểu đồ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Thêm thư viện jsQR để tự động nhận diện và cắt mã QR -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <style>
   :root {
     --teal: #3bbfad; --teal-dark: #2a9d8f; --teal-light: #e0f5f3;
@@ -806,8 +808,75 @@ function saveMultiSession() {
   save(); closeModal('modal-multi-session'); renderCalendar();
 }
 
-// ===== TRANG PHIẾU HỌC PHÍ =====
-function handleQRUpload(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = e => { db.qrCode = e.target.result; save(); renderQRPreview(); }; reader.readAsDataURL(file); }
+// ===== TRANG PHIẾU HỌC PHÍ (ĐÃ NÂNG CẤP TỰ ĐỘNG CẮT MÃ QR) =====
+function handleQRUpload(event) {
+  const file = event.target.files[0]; 
+  if (!file) return; 
+  
+  const reader = new FileReader(); 
+  reader.onload = e => { 
+    const originalDataUrl = e.target.result;
+    
+    // Tạo ảnh ẩn để Canvas đọc
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      
+      // Dùng jsQR quét toàn bộ ảnh
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      
+      if (code) {
+        // Nếu tìm thấy mã QR, lấy tọa độ 4 góc của mã
+        const loc = code.location;
+        const minX = Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x);
+        const minY = Math.min(loc.topLeftCorner.y, loc.topRightCorner.y);
+        const maxX = Math.max(loc.topRightCorner.x, loc.bottomRightCorner.x);
+        const maxY = Math.max(loc.bottomLeftCorner.y, loc.bottomRightCorner.y);
+        
+        const width = maxX - minX;
+        const height = maxY - minY;
+        
+        // Thêm một chút viền trắng xung quanh (khoảng 10%) cho đẹp
+        const padX = width * 0.1;
+        const padY = height * 0.1;
+        
+        const cropX = Math.max(0, minX - padX);
+        const cropY = Math.max(0, minY - padY);
+        const cropW = Math.min(canvas.width - cropX, width + padX * 2);
+        const cropH = Math.min(canvas.height - cropY, height + padY * 2);
+        
+        // Cắt ảnh bằng Canvas thứ 2
+        const cropCanvas = document.createElement('canvas');
+        cropCanvas.width = cropW;
+        cropCanvas.height = cropH;
+        const cropCtx = cropCanvas.getContext('2d');
+        
+        // Tô nền trắng cho ảnh lỡ có viền trong suốt
+        cropCtx.fillStyle = "#ffffff";
+        cropCtx.fillRect(0, 0, cropW, cropH);
+        
+        cropCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+        
+        // Lưu ảnh ĐÃ CẮT
+        db.qrCode = cropCanvas.toDataURL('image/png');
+      } else {
+        // Nếu AI không tìm thấy mã QR nào, giữ nguyên ảnh gốc như logic cũ
+        db.qrCode = originalDataUrl;
+      }
+      
+      save(); 
+      renderQRPreview();
+    };
+    img.src = originalDataUrl;
+  }; 
+  reader.readAsDataURL(file); 
+}
+
 function removeQR() { delete db.qrCode; save(); renderQRPreview(); }
 function renderQRPreview() { const img = document.getElementById('qr-preview-img'); const btn = document.getElementById('qr-remove-btn'); if (db.qrCode) { img.src = db.qrCode; img.style.display = 'block'; btn.style.display = 'inline-flex'; } else { img.src = ''; img.style.display = 'none'; btn.style.display = 'none'; } }
 
@@ -841,7 +910,18 @@ function generatePhieu() {
   let dateChips = []; const attObj = db.attendance[studentId]?.[month];
   if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => `${String(d).padStart(2,'0')}/${month.split('-')[1]}`);
   
-  const html = buildPhieuHTML({ studentName: s.name, monthLabel: `Tháng ${parseInt(month.split('-')[1])}`, total, sessions: p+g, dateChips, comment: document.getElementById('phieu-comment').value.trim(), lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư', typeLabel: typeLabels.join(' + ') || 'Chưa có', qrCode: db.qrCode });
+  const html = buildPhieuHTML({
+    studentName: s.name,
+    monthLabel: `Tháng ${parseInt(month.split('-')[1])}`,
+    total,
+    sessions: p+g,
+    dateChips,
+    comment: document.getElementById('phieu-comment').value.trim(),
+    lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư',
+    typeLabel: typeLabels.join(' + ') || 'Chưa có',
+    qrCode: db.qrCode
+  });
+  
   document.getElementById('phieu-display').innerHTML = html; document.getElementById('phieu-preview').style.display = 'block'; document.getElementById('phieu-preview').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -851,7 +931,13 @@ function buildPhieuHTML(d) {
 
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
-function printDoc(html) { const win = window.open('', '_blank'); win.document.write(`<!DOCTYPE html><html><head><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:'Nunito',sans-serif;}.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:'Quicksand',sans-serif;border:1px solid #e2e8f0;}.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}.phieu-header .thang{font-size:.9rem;opacity:.9;}.phieu-body{padding:18px 20px;}.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}.phieu-row-label{color:#718096;font-weight:600;}.phieu-row-value{font-weight:700;color:#2d3748;}.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}.phieu-dates{margin:10px 0;}.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;}@media print{body{background:white;}}</style></head><body><div class="phieu">${html}</div></body></html>`); win.document.close(); setTimeout(() => { win.print(); }, 600); }
+
+function printDoc(html) {
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:'Nunito',sans-serif;}.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:'Quicksand',sans-serif;border:1px solid #e2e8f0;}.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}.phieu-header .thang{font-size:.9rem;opacity:.9;}.phieu-body{padding:18px 20px;}.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}.phieu-row-label{color:#718096;font-weight:600;}.phieu-row-value{font-weight:700;color:#2d3748;}.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}.phieu-dates{margin:10px 0;}.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;}@media print{body{background:white;}}</style></head><body><div class="phieu">${html}</div></body></html>`);
+  win.document.close();
+  setTimeout(() => { win.print(); }, 600);
+}
 
 function savePhieu() {
   const studentId = document.getElementById('phieu-student').value; if (!studentId) return alert('Vui lòng chọn học sinh!');
@@ -887,7 +973,23 @@ function renderPhieuHistory() {
 }
 
 function togglePaid(id, paid) { const p = db.phieus.find(x => x.id === id); if (!p) return; p.paid = paid; save(); renderPhieuHistory(); if (document.getElementById('page-home').classList.contains('active')) renderHome(); }
-function viewPhieu(id) { const p = db.phieus.find(x => x.id === id); if (!p) return; document.getElementById('modal-view-phieu-content').innerHTML = buildPhieuHTML({ studentName: p.studentName, monthLabel: `Tháng ${parseInt(p.month.split('-')[1])}`, total: p.total, sessions: p.sessions, dateChips: p.dateChips || [], comment: p.comment || '', lop: p.lop || 'Lớp Học Gia Sư', typeLabel: p.typeLabel || '', qrCode: p.qrCode || '' }); openModal('modal-view-phieu'); }
+
+function viewPhieu(id) {
+  const p = db.phieus.find(x => x.id === id); if (!p) return;
+  document.getElementById('modal-view-phieu-content').innerHTML = buildPhieuHTML({
+    studentName: p.studentName,
+    monthLabel: `Tháng ${parseInt(p.month.split('-')[1])}`,
+    total: p.total,
+    sessions: p.sessions,
+    dateChips: p.dateChips || [],
+    comment: p.comment || '',
+    lop: p.lop || 'Lớp Học Gia Sư',
+    typeLabel: p.typeLabel || '',
+    qrCode: p.qrCode || ''
+  });
+  openModal('modal-view-phieu');
+}
+
 function deletePhieu(id) { db.phieus = db.phieus.filter(p => p.id !== id); save(); renderPhieuHistory(); }
 
 // ===== TRANG THỐNG KÊ =====
