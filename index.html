@@ -472,7 +472,6 @@
   </div>
 </div>
 
-<!-- ======================= JAVASCRIPT XỬ LÝ CHÍNH ======================= -->
 <script>
 // BIẾN TOÀN CỤC & TẠO LỊCH CỐ ĐỊNH KHI TRANG LOAD
 let revenueChartInstance = null;
@@ -529,11 +528,8 @@ const firestore = firebase.firestore();
 // DUY TRÌ ĐĂNG NHẬP TRONG MÁY
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
-// XỬ LÝ ĐĂNG NHẬP GOOGLE BẰNG POPUP (MƯỢT & KHÔNG BỊ KẸT MÀN HÌNH NGOÀI)
 function loginGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
-  
-  // Gọi trực tiếp Popup không qua bất kỳ lớp bảo vệ hay đổi giao diện nào để tránh bị chặn
   auth.signInWithPopup(provider).catch(err => {
     document.getElementById('login-error').style.display = 'block';
     if (err.code === 'auth/popup-blocked') {
@@ -932,9 +928,10 @@ function buildPhieuHTML(d) {
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
 
+// Đã bổ sung nút ✕ và ẩn đi khi in
 function printDoc(html) {
   const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:'Nunito',sans-serif;}.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:'Quicksand',sans-serif;border:1px solid #e2e8f0;}.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}.phieu-header .thang{font-size:.9rem;opacity:.9;}.phieu-body{padding:18px 20px;}.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}.phieu-row-label{color:#718096;font-weight:600;}.phieu-row-value{font-weight:700;color:#2d3748;}.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}.phieu-dates{margin:10px 0;}.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;}@media print{body{background:white;}}</style></head><body><div class="phieu">${html}</div></body></html>`);
+  win.document.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:'Nunito',sans-serif;}.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:'Quicksand',sans-serif;border:1px solid #e2e8f0;}.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}.phieu-header .thang{font-size:.9rem;opacity:.9;}.phieu-body{padding:18px 20px;}.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}.phieu-row-label{color:#718096;font-weight:600;}.phieu-row-value{font-weight:700;color:#2d3748;}.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}.phieu-dates{margin:10px 0;}.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;} .close-btn { position: fixed; top: 16px; right: 16px; background: #e53e3e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 0; } .close-btn:active { background: #c53030; transform: scale(0.95); } @media print{body{background:white;} .close-btn { display: none !important; }}</style></head><body><button class="close-btn" onclick="window.close()">✕</button><div class="phieu">${html}</div></body></html>`);
   win.document.close();
   setTimeout(() => { win.print(); }, 600);
 }
