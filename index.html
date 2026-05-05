@@ -473,7 +473,6 @@
 </div>
 
 <script>
-// BIẾN TOÀN CỤC & TẠO LỊCH CỐ ĐỊNH KHI TRANG LOAD
 let revenueChartInstance = null;
 const now = new Date();
 let currentYear = now.getFullYear();
@@ -493,26 +492,25 @@ function populateMonthSelects() {
   let options = '';
   sortedYears.forEach(y => {
     for (let m = 12; m >= 1; m--) {
-      const val = `${y}-${String(m).padStart(2, '0')}`;
-      options += `<option value="${val}">Tháng ${m}/${y}</option>`;
+      const val = y + '-' + String(m).padStart(2, '0');
+      options += '<option value="' + val + '">Tháng ' + m + '/' + y + '</option>';
     }
   });
 
-  const defaultVal = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+  const defaultVal = currentYear + '-' + String(currentMonth+1).padStart(2,'0');
   
   ['home-month', 'phieu-month', 'history-month', 'stats-month-picker'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       const currentVal = el.value || defaultVal;
       el.innerHTML = options;
-      if (options.includes(`value="${currentVal}"`)) el.value = currentVal;
+      if (options.includes('value="' + currentVal + '"')) el.value = currentVal;
       else el.value = defaultVal;
     }
   });
 }
 populateMonthSelects();
 
-// ===== FIREBASE INIT =====
 const firebaseConfig = {
   apiKey: "AIzaSyD_Bf1lv5o4iS0MQO3kByCXWaNOfBESmpc",
   authDomain: "namtruemilk-372004.firebaseapp.com",
@@ -525,7 +523,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-// DUY TRÌ ĐĂNG NHẬP TRONG MÁY
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
 function loginGoogle() {
@@ -582,7 +579,6 @@ function hideApp() {
   db = { students: [], attendance: {}, phieus: [] };
 }
 
-// BẮT TRẠNG THÁI ĐĂNG NHẬP 
 auth.onAuthStateChanged(async user => {
   if (user) { 
     currentUser = user; 
@@ -609,7 +605,6 @@ function showPage(id) {
   if (id === 'page-stats') renderStats();
 }
 
-// ===== TRANG TỔNG QUAN =====
 function renderHome() {
   const total = db.students.length;
   let selectedMonth = document.getElementById('home-month').value;
@@ -637,26 +632,12 @@ function renderHome() {
   const monthNumber = parseInt(selectedMonth.split('-')[1]);
   const unpaidTotal = (db.phieus || []).filter(p => p.month === selectedMonth && !p.paid).reduce((sum, p) => sum + (p.total || 0), 0);
 
-  document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">Học sinh</div></div>
-    <div class="stat-card"><div class="stat-num">${totalSessions}</div><div class="stat-label">Buổi học tháng ${monthNumber}</div></div>
-    <div class="stat-card"><div class="stat-num">${fmt(totalFee)}đ</div><div class="stat-label">Doanh thu tháng ${monthNumber}</div></div>
-    <div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5;">
-      <div class="stat-num-unpaid">${fmt(unpaidTotal)}đ</div>
-      <div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div>
-    </div>
-  `;
+  document.getElementById('stats-grid').innerHTML = '<div class="stat-card"><div class="stat-num">' + total + '</div><div class="stat-label">Học sinh</div></div><div class="stat-card"><div class="stat-num">' + totalSessions + '</div><div class="stat-label">Buổi học tháng ' + monthNumber + '</div></div><div class="stat-card"><div class="stat-num">' + fmt(totalFee) + 'đ</div><div class="stat-label">Doanh thu tháng ' + monthNumber + '</div></div><div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5;"><div class="stat-num-unpaid">' + fmt(unpaidTotal) + 'đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>';
 
   const rec = db.students.slice(-5).reverse();
-  document.getElementById('recent-students').innerHTML = rec.length ? rec.map(s => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
-      <div><div style="font-weight:800;font-size:.9rem">${s.name}</div><div style="font-size:.78rem;color:var(--text-light)">${s.grade||''} ${s.subject?'· '+s.subject:''}</div></div>
-      <span class="tag">${fmt(s.type==='group' ? (s.priceGroup||s.price||0) : (s.pricePrivate||s.price||0))}đ/buổi</span>
-    </div>
-  `).join('') : '<div class="empty-state"><p>Chưa có học sinh nào</p></div>';
+  document.getElementById('recent-students').innerHTML = rec.length ? rec.map(s => '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);"><div><div style="font-weight:800;font-size:.9rem">' + s.name + '</div><div style="font-size:.78rem;color:var(--text-light)">' + (s.grade||'') + ' ' + (s.subject?'· '+s.subject:'') + '</div></div><span class="tag">' + fmt(s.type==='group' ? (s.priceGroup||s.price||0) : (s.pricePrivate||s.price||0)) + 'đ/buổi</span></div>').join('') : '<div class="empty-state"><p>Chưa có học sinh nào</p></div>';
 }
 
-// ===== TRANG HỌC SINH =====
 let currentType = 'private';
 function selectType(type) {
   currentType = type;
@@ -670,20 +651,8 @@ function renderStudents() {
   const q = document.getElementById('search-input')?.value?.toLowerCase() || '';
   const list = db.students.filter(s => s.name.toLowerCase().includes(q));
   const el = document.getElementById('student-list');
-  if (!list.length) { el.innerHTML = `<div class="empty-state"><p>Chưa có học sinh nào</p></div>`; return; }
-  el.innerHTML = list.map(s => `
-    <div class="student-card">
-      <div style="position:absolute;top:10px;right:10px;">${s.type === 'group' ? '<span class="badge-group">👥 Nhóm</span>' : '<span class="badge-private">👤 Riêng</span>'}</div>
-      <div class="student-name">👤 ${s.name}</div>
-      <div class="student-meta">${s.grade || ''}${s.subject ? ' · ' + s.subject : ''}</div>
-      <div class="student-meta" style="margin-top:3px">💰 ${fmt(s.type==='group' ? (s.priceGroup||s.price||0) : (s.pricePrivate||s.price||0))}đ/buổi</div>
-      ${s.phone ? `<div class="student-meta">📞 ${s.phone}</div>` : ''}
-      <div class="student-actions">
-        <button class="btn btn-outline btn-sm" onclick="editStudent('${s.id}')">✏️ Sửa</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">🗑️</button>
-      </div>
-    </div>
-  `).join('');
+  if (!list.length) { el.innerHTML = '<div class="empty-state"><p>Chưa có học sinh nào</p></div>'; return; }
+  el.innerHTML = list.map(s => '<div class="student-card"><div style="position:absolute;top:10px;right:10px;">' + (s.type === 'group' ? '<span class="badge-group">👥 Nhóm</span>' : '<span class="badge-private">👤 Riêng</span>') + '</div><div class="student-name">👤 ' + s.name + '</div><div class="student-meta">' + (s.grade || '') + (s.subject ? ' · ' + s.subject : '') + '</div><div class="student-meta" style="margin-top:3px">💰 ' + fmt(s.type==='group' ? (s.priceGroup||s.price||0) : (s.pricePrivate||s.price||0)) + 'đ/buổi</div>' + (s.phone ? '<div class="student-meta">📞 ' + s.phone + '</div>' : '') + '<div class="student-actions"><button class="btn btn-outline btn-sm" onclick="editStudent(\\'' + s.id + '\\')">✏️ Sửa</button><button class="btn btn-danger btn-sm" onclick="deleteStudent(\\'' + s.id + '\\')">🗑️</button></div></div>').join('');
 }
 
 function openAddStudent() {
@@ -723,11 +692,10 @@ function deleteStudent(id) {
   save(); renderStudents(); renderHome(); renderPhieuStudentSelect();
 }
 
-// ===== TRANG ĐIỂM DANH =====
 function renderAttStudents() {
   const el = document.getElementById('att-student-list');
-  if (!db.students.length) { el.innerHTML = `<div class="empty-state"><p>Thêm học sinh trước</p></div>`; return; }
-  el.innerHTML = db.students.map(s => `<div class="student-card ${selectedStudentId===s.id?'selected':''}" onclick="selectAttStudent('${s.id}')"><div class="student-name">👤 ${s.name}</div></div>`).join('');
+  if (!db.students.length) { el.innerHTML = '<div class="empty-state"><p>Thêm học sinh trước</p></div>'; return; }
+  el.innerHTML = db.students.map(s => '<div class="student-card ' + (selectedStudentId===s.id?'selected':'') + '" onclick="selectAttStudent(\\'' + s.id + '\\')"><div class="student-name">👤 ' + s.name + '</div></div>').join('');
   if (selectedStudentId) renderCalendar();
 }
 
@@ -741,19 +709,19 @@ function changeMonth(d) { currentMonth += d; if (currentMonth > 11) { currentMon
 
 function renderCalendar() {
   if (!selectedStudentId) return;
-  const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+  const key = currentYear + '-' + String(currentMonth+1).padStart(2,'0');
   if (Array.isArray(db.attendance[selectedStudentId]?.[key])) {
     const oldArr = db.attendance[selectedStudentId][key]; db.attendance[selectedStudentId][key] = {}; oldArr.forEach(d => db.attendance[selectedStudentId][key][d] = 'private');
   }
   const attendedObj = db.attendance[selectedStudentId]?.[key] || {};
-  document.getElementById('month-label').textContent = `Tháng ${currentMonth+1}/${currentYear}`;
+  document.getElementById('month-label').textContent = 'Tháng ' + (currentMonth+1) + '/' + currentYear;
 
-  let html = ['T2','T3','T4','T5','T6','T7','CN'].map(d => `<div class="cal-head">${d}</div>`).join('');
+  let html = ['T2','T3','T4','T5','T6','T7','CN'].map(d => '<div class="cal-head">' + d + '</div>').join('');
   const first = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
   const total = new Date(currentYear, currentMonth+1, 0).getDate();
   const today = new Date(); let totalSessions = 0;
 
-  for (let i = 0; i < first; i++) html += `<div class="cal-day empty"></div>`;
+  for (let i = 0; i < first; i++) html += '<div class="cal-day empty"></div>';
   for (let d = 1; d <= total; d++) {
     const isToday = today.getFullYear()===currentYear && today.getMonth()===currentMonth && today.getDate()===d;
     const val = attendedObj[d] || ''; let p = 0, g = 0;
@@ -764,16 +732,16 @@ function renderCalendar() {
     if (p > 0 || g > 0) {
         totalSessions += (p + g);
         if (p > 0 && g === 0) cls += 'att-private'; else if (g > 0 && p === 0) cls += 'att-group'; else cls += 'att-mix';
-        if ((p + g) > 1) badge = `<span class="multi-badge">${p + g}</span>`;
+        if ((p + g) > 1) badge = '<span class="multi-badge">' + (p + g) + '</span>';
     }
-    html += `<div class="cal-day ${cls}" onclick="toggleDay(${d})" style="position:relative">${d}${badge}</div>`;
+    html += '<div class="cal-day ' + cls + '" onclick="toggleDay(' + d + ')" style="position:relative">' + d + badge + '</div>';
   }
-  document.getElementById('calendar').innerHTML = html; document.getElementById('att-count-label').textContent = `✅ ${totalSessions} buổi học`;
+  document.getElementById('calendar').innerHTML = html; document.getElementById('att-count-label').textContent = '✅ ' + totalSessions + ' buổi học';
 }
 
 function toggleDay(day) {
   if (!selectedStudentId) return;
-  const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+  const key = currentYear + '-' + String(currentMonth+1).padStart(2,'0');
   if (!db.attendance[selectedStudentId]) db.attendance[selectedStudentId] = {};
   if (!db.attendance[selectedStudentId][key]) db.attendance[selectedStudentId][key] = {};
   const current = db.attendance[selectedStudentId][key][day] || '';
@@ -786,25 +754,24 @@ function toggleDay(day) {
 function openMultiSessionModal() {
   if (!selectedStudentId) return alert('Chọn học sinh trước!');
   const totalDays = new Date(currentYear, currentMonth+1, 0).getDate();
-  document.getElementById('ms-day').innerHTML = Array.from({length: totalDays}, (_, i) => `<option value="${i+1}">Ngày ${i+1}</option>`).join('');
+  document.getElementById('ms-day').innerHTML = Array.from({length: totalDays}, (_, i) => '<option value="' + (i+1) + '">Ngày ' + (i+1) + '</option>').join('');
   document.getElementById('ms-p').value = 0; document.getElementById('ms-g').value = 0; openModal('modal-multi-session');
 }
 
 function saveMultiSession() {
   const d = parseInt(document.getElementById('ms-day').value);
   const p = parseInt(document.getElementById('ms-p').value) || 0; const g = parseInt(document.getElementById('ms-g').value) || 0;
-  const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+  const key = currentYear + '-' + String(currentMonth+1).padStart(2,'0');
   if (!db.attendance[selectedStudentId]) db.attendance[selectedStudentId] = {};
   if (!db.attendance[selectedStudentId][key]) db.attendance[selectedStudentId][key] = {};
   
   if (p === 0 && g === 0) delete db.attendance[selectedStudentId][key][d];
   else if (p === 1 && g === 0) db.attendance[selectedStudentId][key][d] = 'private';
   else if (p === 0 && g === 1) db.attendance[selectedStudentId][key][d] = 'group';
-  else db.attendance[selectedStudentId][key][d] = `p:${p},g:${g}`;
+  else db.attendance[selectedStudentId][key][d] = 'p:' + p + ',g:' + g;
   save(); closeModal('modal-multi-session'); renderCalendar();
 }
 
-// ===== TRANG PHIẾU HỌC PHÍ (ĐÃ NÂNG CẤP TỰ ĐỘNG CẮT MÃ QR) =====
 function handleQRUpload(event) {
   const file = event.target.files[0]; 
   if (!file) return; 
@@ -812,8 +779,6 @@ function handleQRUpload(event) {
   const reader = new FileReader(); 
   reader.onload = e => { 
     const originalDataUrl = e.target.result;
-    
-    // Tạo ảnh ẩn để Canvas đọc
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
@@ -822,12 +787,10 @@ function handleQRUpload(event) {
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0, img.width, img.height);
       
-      // Dùng jsQR quét toàn bộ ảnh
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, imageData.width, imageData.height);
       
       if (code) {
-        // Nếu tìm thấy mã QR, lấy tọa độ 4 góc của mã
         const loc = code.location;
         const minX = Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x);
         const minY = Math.min(loc.topLeftCorner.y, loc.topRightCorner.y);
@@ -837,7 +800,6 @@ function handleQRUpload(event) {
         const width = maxX - minX;
         const height = maxY - minY;
         
-        // Thêm một chút viền trắng xung quanh (khoảng 10%) cho đẹp
         const padX = width * 0.1;
         const padY = height * 0.1;
         
@@ -846,25 +808,18 @@ function handleQRUpload(event) {
         const cropW = Math.min(canvas.width - cropX, width + padX * 2);
         const cropH = Math.min(canvas.height - cropY, height + padY * 2);
         
-        // Cắt ảnh bằng Canvas thứ 2
         const cropCanvas = document.createElement('canvas');
         cropCanvas.width = cropW;
         cropCanvas.height = cropH;
         const cropCtx = cropCanvas.getContext('2d');
         
-        // Tô nền trắng cho ảnh lỡ có viền trong suốt
         cropCtx.fillStyle = "#ffffff";
         cropCtx.fillRect(0, 0, cropW, cropH);
-        
         cropCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-        
-        // Lưu ảnh ĐÃ CẮT
         db.qrCode = cropCanvas.toDataURL('image/png');
       } else {
-        // Nếu AI không tìm thấy mã QR nào, giữ nguyên ảnh gốc như logic cũ
         db.qrCode = originalDataUrl;
       }
-      
       save(); 
       renderQRPreview();
     };
@@ -876,7 +831,7 @@ function handleQRUpload(event) {
 function removeQR() { delete db.qrCode; save(); renderQRPreview(); }
 function renderQRPreview() { const img = document.getElementById('qr-preview-img'); const btn = document.getElementById('qr-remove-btn'); if (db.qrCode) { img.src = db.qrCode; img.style.display = 'block'; btn.style.display = 'inline-flex'; } else { img.src = ''; img.style.display = 'none'; btn.style.display = 'none'; } }
 
-function renderPhieuStudentSelect() { document.getElementById('phieu-student').innerHTML = '<option value="">-- Chọn học sinh --</option>' + db.students.map(s => `<option value="${s.id}">${s.name}</option>`).join(''); }
+function renderPhieuStudentSelect() { document.getElementById('phieu-student').innerHTML = '<option value="">-- Chọn học sinh --</option>' + db.students.map(s => '<option value="' + s.id + '">' + s.name + '</option>').join(''); }
 
 function autoFillAttendance() {
   const id = document.getElementById('phieu-student').value; const month = document.getElementById('phieu-month').value;
@@ -902,36 +857,76 @@ function generatePhieu() {
   const month = document.getElementById('phieu-month').value; const s = db.students.find(x => x.id === studentId);
   const p = parseInt(document.getElementById('phieu-private-sessions').value) || 0; const g = parseInt(document.getElementById('phieu-group-sessions').value) || 0;
   const total = p * (s.pricePrivate || s.price || 0) + g * (s.priceGroup || s.price || 0);
-  let typeLabels = []; if (p > 0) typeLabels.push(`👤 ${p} Riêng`); if (g > 0) typeLabels.push(`👥 ${g} Nhóm`);
+  let typeLabels = []; if (p > 0) typeLabels.push('👤 ' + p + ' Riêng'); if (g > 0) typeLabels.push('👥 ' + g + ' Nhóm');
   let dateChips = []; const attObj = db.attendance[studentId]?.[month];
-  if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => `${String(d).padStart(2,'0')}/${month.split('-')[1]}`);
+  if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => String(d).padStart(2,'0') + '/' + month.split('-')[1]);
   
   const html = buildPhieuHTML({
     studentName: s.name,
-    monthLabel: `Tháng ${parseInt(month.split('-')[1])}`,
-    total,
+    monthLabel: 'Tháng ' + parseInt(month.split('-')[1]),
+    total: total,
     sessions: p+g,
-    dateChips,
+    dateChips: dateChips,
     comment: document.getElementById('phieu-comment').value.trim(),
     lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư',
     typeLabel: typeLabels.join(' + ') || 'Chưa có',
     qrCode: db.qrCode
   });
   
-  document.getElementById('phieu-display').innerHTML = html; document.getElementById('phieu-preview').style.display = 'block'; document.getElementById('phieu-preview').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('phieu-display').innerHTML = html;
+  document.getElementById('phieu-preview').style.display = 'block';
+  document.getElementById('phieu-preview').scrollIntoView({ behavior: 'smooth' });
 }
 
 function buildPhieuHTML(d) {
-  return `<div class="phieu-header"><div class="lop">${d.lop}</div><div class="title">PHIẾU HỌC PHÍ</div><div class="thang">${d.monthLabel}</div></div><div class="phieu-body"><div class="phieu-row"><span class="phieu-row-label">🐻 Học sinh</span><span class="phieu-row-value">${d.studentName}</span></div><div class="phieu-row"><span class="phieu-row-label">📚 Hình thức</span><span class="phieu-row-value" style="font-size:0.8rem;">${d.typeLabel}</span></div><div class="phieu-row"><span class="phieu-row-label">📝 Số buổi học</span><span class="phieu-row-value">${d.sessions} buổi</span></div><div class="phieu-total"><div class="phieu-total-label">Tổng học phí</div><div class="phieu-total-value">${fmt(d.total)}đ</div></div>${d.dateChips.length ? `<div class="phieu-dates"><div class="phieu-dates-label">Ngày đi học</div><div class="phieu-dates-wrap">${d.dateChips.map(c => `<span class="phieu-date-chip">${c}</span>`).join('')}</div></div>` : ''}${d.comment ? `<div style="text-align:center;font-size:.68rem;font-weight:800;color:var(--text-light);margin:10px 0 6px;text-transform:uppercase;">— Nhận xét —</div><div class="phieu-comment">${d.comment}</div>` : ''}${d.qrCode ? `<div style="text-align:center;margin-top:15px;"><div style="font-size:0.65rem;font-weight:800;color:var(--text-light);text-transform:uppercase;margin-bottom:5px;">Quét để thanh toán</div><img src="${d.qrCode}" style="width:100px;height:100px;border-radius:8px;border:2px solid var(--teal-light);object-fit:cover;"></div>` : ''}<div class="phieu-footer">📚 Chúc em học tập tốt!</div></div>`;
+  let chipHtml = d.dateChips.map(c => '<span class="phieu-date-chip">' + c + '</span>').join('');
+  let dateSection = d.dateChips.length ? '<div class="phieu-dates"><div class="phieu-dates-label">Ngày đi học</div><div class="phieu-dates-wrap">' + chipHtml + '</div></div>' : '';
+  let commentSection = d.comment ? '<div style="text-align:center;font-size:.68rem;font-weight:800;color:var(--text-light);margin:10px 0 6px;text-transform:uppercase;">— Nhận xét —</div><div class="phieu-comment">' + d.comment + '</div>' : '';
+  let qrSection = d.qrCode ? '<div style="text-align:center;margin-top:15px;"><div style="font-size:0.65rem;font-weight:800;color:var(--text-light);text-transform:uppercase;margin-bottom:5px;">Quét để thanh toán</div><img src="' + d.qrCode + '" style="width:100px;height:100px;border-radius:8px;border:2px solid var(--teal-light);object-fit:cover;"></div>' : '';
+  
+  return '<div class="phieu-header"><div class="lop">' + d.lop + '</div><div class="title">PHIẾU HỌC PHÍ</div><div class="thang">' + d.monthLabel + '</div></div><div class="phieu-body"><div class="phieu-row"><span class="phieu-row-label">🐻 Học sinh</span><span class="phieu-row-value">' + d.studentName + '</span></div><div class="phieu-row"><span class="phieu-row-label">📚 Hình thức</span><span class="phieu-row-value" style="font-size:0.8rem;">' + d.typeLabel + '</span></div><div class="phieu-row"><span class="phieu-row-label">📝 Số buổi học</span><span class="phieu-row-value">' + d.sessions + ' buổi</span></div><div class="phieu-total"><div class="phieu-total-label">Tổng học phí</div><div class="phieu-total-value">' + fmt(d.total) + 'đ</div></div>' + dateSection + commentSection + qrSection + '<div class="phieu-footer">📚 Chúc em học tập tốt!</div></div>';
 }
 
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
 
-// Đã bổ sung nút ✕ và ẩn đi khi in
+// HÀM IN PHIẾU ĐÃ ĐƯỢC CHỈNH SỬA - THÊM NÚT X MÀU ĐỎ ĐÓNG CỬA SỔ
 function printDoc(html) {
   const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:'Nunito',sans-serif;}.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:'Quicksand',sans-serif;border:1px solid #e2e8f0;}.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}.phieu-header .thang{font-size:.9rem;opacity:.9;}.phieu-body{padding:18px 20px;}.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}.phieu-row-label{color:#718096;font-weight:600;}.phieu-row-value{font-weight:700;color:#2d3748;}.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}.phieu-dates{margin:10px 0;}.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;} .close-btn { position: fixed; top: 16px; right: 16px; background: #e53e3e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 0; } .close-btn:active { background: #c53030; transform: scale(0.95); } @media print{body{background:white;} .close-btn { display: none !important; }}</style></head><body><button class="close-btn" onclick="window.close()">✕</button><div class="phieu">${html}</div></body></html>`);
+  let docHtml = '<!DOCTYPE html><html><head>';
+  docHtml += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">';
+  docHtml += '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">';
+  docHtml += '<style>';
+  docHtml += 'body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:"Nunito",sans-serif;}';
+  docHtml += '.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:"Quicksand",sans-serif;border:1px solid #e2e8f0;box-shadow:0 8px 40px rgba(0,0,0,0.08);}';
+  docHtml += '.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}';
+  docHtml += '.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}';
+  docHtml += '.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}';
+  docHtml += '.phieu-header .thang{font-size:.9rem;opacity:.9;}';
+  docHtml += '.phieu-body{padding:18px 20px;}';
+  docHtml += '.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}';
+  docHtml += '.phieu-row-label{color:#718096;font-weight:600;}';
+  docHtml += '.phieu-row-value{font-weight:700;color:#2d3748;}';
+  docHtml += '.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}';
+  docHtml += '.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}';
+  docHtml += '.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}';
+  docHtml += '.phieu-dates{margin:10px 0;}';
+  docHtml += '.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}';
+  docHtml += '.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}';
+  docHtml += '.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}';
+  docHtml += '.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}';
+  docHtml += '.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;}';
+  /* CSS của nút đóng màu đỏ, đặt cố định ở góc trên bên phải */
+  docHtml += '.close-btn{position:fixed;top:20px;right:20px;background:#e53e3e;color:white;border:none;border-radius:50%;width:44px;height:44px;font-size:22px;font-weight:bold;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3);z-index:99999;display:flex;align-items:center;justify-content:center;}';
+  /* Ẩn nút đóng đi khi in ra file PDF */
+  docHtml += '@media print{body{background:white;} .close-btn{display:none !important;}}';
+  docHtml += '</style></head><bo' + 'dy>';
+  /* Nút bấm kèm lệnh tự đóng hoặc quay lại */
+  docHtml += '<button class="close-btn" onclick="window.close(); window.history.back();">✕</button>';
+  docHtml += '<div class="phieu">' + html + '</div>';
+  docHtml += '</bo' + 'dy></ht' + 'ml>';
+  
+  win.document.write(docHtml);
   win.document.close();
   setTimeout(() => { win.print(); }, 600);
 }
@@ -941,32 +936,34 @@ function savePhieu() {
   const month = document.getElementById('phieu-month').value; const s = db.students.find(x => x.id === studentId);
   const p = parseInt(document.getElementById('phieu-private-sessions').value) || 0; const g = parseInt(document.getElementById('phieu-group-sessions').value) || 0;
   const total = p * (s.pricePrivate || s.price || 0) + g * (s.priceGroup || s.price || 0);
-  let typeLabels = []; if (p > 0) typeLabels.push(`👤 ${p} Riêng`); if (g > 0) typeLabels.push(`👥 ${g} Nhóm`);
+  let typeLabels = []; if (p > 0) typeLabels.push('👤 ' + p + ' Riêng'); if (g > 0) typeLabels.push('👥 ' + g + ' Nhóm');
   let dateChips = []; const attObj = db.attendance[studentId]?.[month];
-  if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => `${String(d).padStart(2,'0')}/${month.split('-')[1]}`);
+  if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => String(d).padStart(2,'0') + '/' + month.split('-')[1]);
   
   db.phieus = db.phieus || [];
-  db.phieus.unshift({ id: Date.now().toString(), studentId, studentName: s.name, month, price: total, sessions: p+g, total, typeLabel: typeLabels.join(' + ') || 'Chưa có', dateChips, comment: document.getElementById('phieu-comment').value.trim(), lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư', qrCode: db.qrCode || '', createdAt: new Date().toISOString() });
+  db.phieus.unshift({
+    id: Date.now().toString(),
+    studentId: studentId,
+    studentName: s.name,
+    month: month,
+    price: total,
+    sessions: p+g,
+    total: total,
+    typeLabel: typeLabels.join(' + ') || 'Chưa có',
+    dateChips: dateChips,
+    comment: document.getElementById('phieu-comment').value.trim(),
+    lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư',
+    qrCode: db.qrCode || '',
+    createdAt: new Date().toISOString()
+  });
   save(); renderPhieuHistory(); populateMonthSelects(); alert('✅ Đã lưu phiếu!');
 }
 
 function renderPhieuHistory() {
   const filterMonth = document.getElementById('history-month').value; const el = document.getElementById('phieu-history');
   const filtered = filterMonth ? (db.phieus || []).filter(p => p.month === filterMonth) : (db.phieus || []);
-  if (!filtered.length) { el.innerHTML = `<div class="empty-state"><p>Không có phiếu nào trong ${formatMonth(filterMonth)}</p></div>`; return; }
-  el.innerHTML = filtered.slice(0, 20).map(p => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
-      <div style="cursor:pointer;flex:1;min-width:0;" onclick="viewPhieu('${p.id}')">
-        <div style="font-weight:800;font-size:.9rem;color:var(--teal-dark);text-decoration:underline dotted;text-underline-offset:3px;">🧾 ${p.studentName}</div>
-        <div style="font-size:.78rem;color:var(--text-light)">${formatMonth(p.month)} · ${p.sessions} buổi</div>
-      </div>
-      <label style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;flex-shrink:0;">
-        <input type="checkbox" ${p.paid ? 'checked' : ''} onchange="togglePaid('${p.id}', this.checked)" style="width:18px;height:18px;accent-color:var(--teal);cursor:pointer;">
-        <span style="font-size:.65rem;font-weight:700;color:${p.paid ? 'var(--teal)' : '#e53e3e'};">${p.paid ? '✅ Đã TT' : '⏳ Chưa TT'}</span>
-      </label>
-      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="font-weight:800;color:${p.paid ? 'var(--teal)' : '#e53e3e'}">${fmt(p.total)}</span><button class="btn btn-danger btn-sm" onclick="deletePhieu('${p.id}')">🗑️</button></div>
-    </div>
-  `).join('');
+  if (!filtered.length) { el.innerHTML = '<div class="empty-state"><p>Không có phiếu nào trong ' + formatMonth(filterMonth) + '</p></div>'; return; }
+  el.innerHTML = filtered.slice(0, 20).map(p => '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;"><div style="cursor:pointer;flex:1;min-width:0;" onclick="viewPhieu(\\'' + p.id + '\\')"><div style="font-weight:800;font-size:.9rem;color:var(--teal-dark);text-decoration:underline dotted;text-underline-offset:3px;">🧾 ' + p.studentName + '</div><div style="font-size:.78rem;color:var(--text-light)">' + formatMonth(p.month) + ' · ' + p.sessions + ' buổi</div></div><label style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;flex-shrink:0;"><input type="checkbox" ' + (p.paid ? 'checked' : '') + ' onchange="togglePaid(\\'' + p.id + '\\', this.checked)" style="width:18px;height:18px;accent-color:var(--teal);cursor:pointer;"><span style="font-size:.65rem;font-weight:700;color:' + (p.paid ? 'var(--teal)' : '#e53e3e') + ';">' + (p.paid ? '✅ Đã TT' : '⏳ Chưa TT') + '</span></label><div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span style="font-weight:800;color:' + (p.paid ? 'var(--teal)' : '#e53e3e') + '">' + fmt(p.total) + '</span><button class="btn btn-danger btn-sm" onclick="deletePhieu(\\'' + p.id + '\\')">🗑️</button></div></div>').join('');
 }
 
 function togglePaid(id, paid) { const p = db.phieus.find(x => x.id === id); if (!p) return; p.paid = paid; save(); renderPhieuHistory(); if (document.getElementById('page-home').classList.contains('active')) renderHome(); }
@@ -975,7 +972,7 @@ function viewPhieu(id) {
   const p = db.phieus.find(x => x.id === id); if (!p) return;
   document.getElementById('modal-view-phieu-content').innerHTML = buildPhieuHTML({
     studentName: p.studentName,
-    monthLabel: `Tháng ${parseInt(p.month.split('-')[1])}`,
+    monthLabel: 'Tháng ' + parseInt(p.month.split('-')[1]),
     total: p.total,
     sessions: p.sessions,
     dateChips: p.dateChips || [],
@@ -989,7 +986,6 @@ function viewPhieu(id) {
 
 function deletePhieu(id) { db.phieus = db.phieus.filter(p => p.id !== id); save(); renderPhieuHistory(); }
 
-// ===== TRANG THỐNG KÊ =====
 function renderStats() {
   const mode = document.getElementById('stats-mode').value;
   if (mode === 'year') { document.getElementById('stats-view-year').style.display = 'block'; document.getElementById('stats-view-month').style.display = 'none'; renderStatsYearly(); } 
@@ -1001,7 +997,7 @@ function renderStatsYearly() {
   if (!yearSelect.options.length) {
     const years = new Set(); for (let y = currentYear - 3; y <= currentYear + 4; y++) years.add(y.toString());
     (db.phieus || []).forEach(p => { if(p.month) years.add(p.month.split('-')[0]); });
-    Array.from(years).sort((a,b)=>b-a).forEach(y => yearSelect.innerHTML += `<option value="${y}">Năm ${y}</option>`);
+    Array.from(years).sort((a,b)=>b-a).forEach(y => yearSelect.innerHTML += '<option value="' + y + '">Năm ' + y + '</option>');
     yearSelect.value = currentYear.toString();
   }
   const selectedYear = yearSelect.value; let totalCreated = 0; let totalReceived = 0;
@@ -1013,11 +1009,7 @@ function renderStatsYearly() {
     if(mIndex >= 0 && mIndex <= 11) { monthlyData[mIndex].created += amt; if (p.paid) monthlyData[mIndex].received += amt; }
   });
 
-  document.getElementById('stats-year-grid').innerHTML = `
-    <div class="stat-card" style="border:2px solid var(--teal-light);"><div class="stat-num" style="font-size:1.35rem;">${fmt(totalCreated)}đ</div><div class="stat-label">Tổng học phí</div></div>
-    <div class="stat-card" style="border:2px solid #c6f6d5;background:#f0fff4;"><div class="stat-num" style="font-size:1.35rem;color:#38a169;">${fmt(totalReceived)}đ</div><div class="stat-label" style="color:#2f855a;">Học phí thực nhận</div></div>
-    <div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5; grid-column: 1 / -1;"><div class="stat-num-unpaid" style="font-size:1.35rem;">${fmt(totalCreated - totalReceived)}đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>
-  `;
+  document.getElementById('stats-year-grid').innerHTML = '<div class="stat-card" style="border:2px solid var(--teal-light);"><div class="stat-num" style="font-size:1.35rem;">' + fmt(totalCreated) + 'đ</div><div class="stat-label">Tổng học phí</div></div><div class="stat-card" style="border:2px solid #c6f6d5;background:#f0fff4;"><div class="stat-num" style="font-size:1.35rem;color:#38a169;">' + fmt(totalReceived) + 'đ</div><div class="stat-label" style="color:#2f855a;">Học phí thực nhận</div></div><div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5; grid-column: 1 / -1;"><div class="stat-num-unpaid" style="font-size:1.35rem;">' + fmt(totalCreated - totalReceived) + 'đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>';
 
   let activeMonths = 0; monthlyData.forEach(d => { if(d.created > 0) activeMonths++; });
   document.getElementById('avg-revenue-display').textContent = fmt(activeMonths > 0 ? Math.round(totalCreated / activeMonths) : 0) + 'đ';
@@ -1035,28 +1027,17 @@ function renderStatsMonthly() {
   const monthPhieus = (db.phieus || []).filter(p => p.month === filterMonth);
   monthPhieus.forEach(p => { const amt = p.total || 0; totalCreated += amt; if (p.paid) totalReceived += amt; });
 
-  document.getElementById('stats-month-grid').innerHTML = `
-    <div class="stat-card" style="border:2px solid var(--teal-light);"><div class="stat-num" style="font-size:1.35rem;">${fmt(totalCreated)}đ</div><div class="stat-label">Tổng học phí</div></div>
-    <div class="stat-card" style="border:2px solid #c6f6d5;background:#f0fff4;"><div class="stat-num" style="font-size:1.35rem;color:#38a169;">${fmt(totalReceived)}đ</div><div class="stat-label" style="color:#2f855a;">Học phí thực nhận</div></div>
-    <div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5; grid-column: 1 / -1;"><div class="stat-num-unpaid" style="font-size:1.35rem;">${fmt(totalCreated - totalReceived)}đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>
-  `;
+  document.getElementById('stats-month-grid').innerHTML = '<div class="stat-card" style="border:2px solid var(--teal-light);"><div class="stat-num" style="font-size:1.35rem;">' + fmt(totalCreated) + 'đ</div><div class="stat-label">Tổng học phí</div></div><div class="stat-card" style="border:2px solid #c6f6d5;background:#f0fff4;"><div class="stat-num" style="font-size:1.35rem;color:#38a169;">' + fmt(totalReceived) + 'đ</div><div class="stat-label" style="color:#2f855a;">Học phí thực nhận</div></div><div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5; grid-column: 1 / -1;"><div class="stat-num-unpaid" style="font-size:1.35rem;">' + fmt(totalCreated - totalReceived) + 'đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>';
 
-  document.getElementById('stats-student-list').innerHTML = monthPhieus.length ? monthPhieus.map(p => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px dashed var(--border);">
-      <div><div style="font-weight:800;font-size:0.95rem;color:var(--teal-dark);">🎓 ${p.studentName}</div><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">${p.sessions} buổi</div></div>
-      <div style="text-align:right;"><div style="font-size:0.95rem;font-weight:800;color:${p.paid ? '#38a169' : '#e53e3e'};">${fmt(p.total)}đ</div>
-        <span style="display:inline-block;margin-top:4px;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:10px;background:${p.paid?'#f0fff4':'#fff5f5'};color:${p.paid?'#2f855a':'#c53030'};border:1px solid ${p.paid?'#c6f6d5':'#fed7d7'};">${p.paid ? 'Đã Thanh Toán' : 'Chưa Thanh Toán'}</span>
-      </div>
-    </div>`).join('') : `<div class="empty-state"><p>Chưa có phiếu thu nào trong ${formatMonth(filterMonth)}</p></div>`;
+  document.getElementById('stats-student-list').innerHTML = monthPhieus.length ? monthPhieus.map(p => '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px dashed var(--border);"><div><div style="font-weight:800;font-size:0.95rem;color:var(--teal-dark);">🎓 ' + p.studentName + '</div><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">' + p.sessions + ' buổi</div></div><div style="text-align:right;"><div style="font-size:0.95rem;font-weight:800;color:' + (p.paid ? '#38a169' : '#e53e3e') + ';">' + fmt(p.total) + 'đ</div><span style="display:inline-block;margin-top:4px;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:10px;background:' + (p.paid?'#f0fff4':'#fff5f5') + ';color:' + (p.paid?'#2f855a':'#c53030') + ';border:1px solid ' + (p.paid?'#c6f6d5':'#fed7d7') + ';">' + (p.paid ? 'Đã Thanh Toán' : 'Chưa Thanh Toán') + '</span></div></div>').join('') : '<div class="empty-state"><p>Chưa có phiếu thu nào trong ' + formatMonth(filterMonth) + '</p></div>';
 }
 
-// ===== UTILS & MODALS =====
 function fmt(n) { return Number(n).toLocaleString('vi-VN'); }
-function formatMonth(m) { return m ? `Tháng ${parseInt(m.split('-')[1])}/${m.split('-')[0]}` : ''; }
+function formatMonth(m) { return m ? 'Tháng ' + parseInt(m.split('-')[1]) + '/' + m.split('-')[0] : ''; }
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(o => { o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }); });
-function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' })); a.download = `giasu_backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); }
+function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' })); a.download = 'giasu_backup_' + new Date().toISOString().slice(0,10) + '.json'; a.click(); }
 function importData(e) { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = ev => { try { const d = JSON.parse(ev.target.result); if(confirm('Nhập dữ liệu sẽ GHI ĐÈ toàn bộ dữ liệu hiện tại. Tiếp tục?')) { db = d; save(); renderHome(); alert('✅ Thành công!'); } } catch { alert('❌ File không hợp lệ!'); } }; r.readAsText(f); }
 </script>
 </body>
