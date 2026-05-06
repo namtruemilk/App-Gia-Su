@@ -6,7 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Quản Lý Học Phí — Gia Sư</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Thêm thư viện Chart.js để vẽ biểu đồ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Thêm thư viện jsQR để tự động nhận diện và cắt mã QR -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <style>
   :root {
@@ -20,23 +22,23 @@
     --radius: 18px;
   }
   
-  /* BẢNG MÀU DARK MODE MỚI */
+  /* BẢNG MÀU DARK MODE MỚI - SIÊU NỊNH MẮT, NEON PHÁT SÁNG */
   body.dark {
-    --bg: #0b1120; 
-    --white: #1e293b; 
-    --text: #ffffff; 
-    --text-light: #94a3b8; 
-    --border: #334155; 
-    --teal-light: #134e4a; 
-    --teal-dark: #5eead4; 
-    --teal: #2dd4bf; 
+    --bg: #0f172a; /* Nền xanh đen sâu thẳm slate */
+    --white: #1e293b; /* Nền các thẻ Card nổi bật hơn nền chính */
+    --text: #f8fafc; /* Chữ trắng tuyết, cực kỳ rõ nét */
+    --text-light: #94a3b8; /* Chữ phụ màu xám ngọc */
+    --border: #334155; /* Viền thẻ tinh tế */
+    --teal-light: #134e4a; /* Nền nhạt của các thẻ nhấn mạnh */
+    --teal-dark: #5eead4; /* CHỮ TIÊU ĐỀ: Xanh ngọc Neon phát sáng */
+    --teal: #2dd4bf; /* Nút bấm xanh ngọc bích */
     --yellow-light: #451a03;
-    --pink-light: #701a75; 
-    --pink: #f472b6; 
-    --shadow: 0 8px 30px rgba(0,0,0,0.8); 
+    --pink-light: #4c0519; 
+    --pink: #f472b6; /* Điểm nhấn màu hồng neon */
+    --shadow: 0 8px 30px rgba(0,0,0,0.6);
   }
   body.dark .login-box { background: rgba(30, 41, 59, 0.85); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-  body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
+  body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f8fafc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
   body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; }
   body.dark .badge-private { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
   body.dark .badge-group { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
@@ -181,12 +183,12 @@
       <div style="font-size:.85rem;color:var(--text-light);margin-top:4px;font-weight:700;">powered by namtruemilk</div>
     </div>
     
+    <!-- LỆNH ĐĂNG NHẬP POPUP GỐC - HOẠT ĐỘNG 100% -->
     <button onclick="loginGoogle()" style="display:flex;align-items:center;gap:10px;padding:12px 28px;background:white;color:#3c4043;border:2px solid #dadce0;border-radius:30px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="22" height="22">
       Đăng nhập với Google
     </button>
-    <!-- THÊM THÔNG BÁO MÀU SẮC CHO ĐĂNG NHẬP REDIRECT -->
-    <div id="login-error" style="font-size:.85rem;font-weight:700;display:none;max-width:250px;text-align:center;line-height:1.4;margin-top:10px;"></div>
+    <div id="login-error" style="color:#e53e3e;font-size:.85rem;font-weight:700;display:none;max-width:250px;text-align:center;line-height:1.4;margin-top:10px;"></div>
   </div>
 </div>
 
@@ -404,7 +406,6 @@
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" onclick="printPhieu()">🖨️ In phiếu</button>
             <button class="btn btn-pink btn-sm" onclick="savePhieu()">💾 Lưu</button>
-            <!-- NÚT GỬI ZALO -->
             <button class="btn btn-sm" style="background:#0068ff; color:white; border:none;" onclick="openZaloModal()">💬 Gửi Zalo</button>
           </div>
         </div>
@@ -590,7 +591,7 @@ function populateMonthSelects() {
 }
 populateMonthSelects();
 
-// ===== FIREBASE INIT & LOGIN NÂNG CẤP =====
+// ===== FIREBASE INIT & LOGIN BẢN GỐC TỪ ĐẦU =====
 const firebaseConfig = {
   apiKey: "AIzaSyD_Bf1lv5o4iS0MQO3kByCXWaNOfBESmpc",
   authDomain: "namtruemilk-372004.firebaseapp.com",
@@ -605,30 +606,15 @@ const firestore = firebase.firestore();
 
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
-// 🚀 NÂNG CẤP: DÙNG REDIRECT ĐỂ TRÁNH LỖI CHẶN POPUP TRÊN ĐIỆN THOẠI
+// 🚀 TRẢ LẠI 100% CƠ CHẾ POPUP ĐĂNG NHẬP GỐC!
 function loginGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
-  const errorDiv = document.getElementById('login-error');
-  
-  errorDiv.style.display = 'block';
-  errorDiv.style.color = '#3bbfad';
-  errorDiv.textContent = 'Đang chuyển hướng sang Google...';
-  
-  auth.signInWithRedirect(provider).catch(err => {
-    errorDiv.style.color = '#e53e3e';
-    errorDiv.textContent = 'Lỗi: ' + err.message;
+  document.getElementById('login-error').style.display = 'none';
+  auth.signInWithPopup(provider).catch(err => {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-error').innerHTML = 'Lỗi: ' + err.message + '<br>Hãy thử mở bằng trình duyệt (Safari/Chrome) thay vì xem trước.';
   });
 }
-
-// Bắt lỗi nếu Redirect quay lại gặp trục trặc
-auth.getRedirectResult().catch(err => {
-  const errorDiv = document.getElementById('login-error');
-  if(errorDiv) {
-    errorDiv.style.display = 'block';
-    errorDiv.style.color = '#e53e3e';
-    errorDiv.textContent = 'Lỗi đăng nhập: ' + err.message;
-  }
-});
 
 function logoutUser() { auth.signOut(); }
 
@@ -1068,7 +1054,6 @@ function buildPhieuHTML(d) {
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
 
-// HÀM IN FIX LỖI CRASH 
 function printDoc(html) {
   const win = window.open('', '_blank');
   let docHtml = '<!DOCTYPE html><html><head>';
@@ -1163,7 +1148,7 @@ function viewPhieu(id) {
 
 function deletePhieu(id) { db.phieus = db.phieus.filter(p => p.id !== id); save(); renderPhieuHistory(); }
 
-// ===== TRANG THỐNG KÊ =====
+// ===== STATS PAGE =====
 function renderStats() {
   const mode = document.getElementById('stats-mode').value;
   if (mode === 'year') { document.getElementById('stats-view-year').style.display = 'block'; document.getElementById('stats-view-month').style.display = 'none'; renderStatsYearly(); } 
