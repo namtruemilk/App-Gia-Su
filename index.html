@@ -22,38 +22,50 @@
     --radius: 18px;
   }
   
-  /* BẢNG MÀU DARK MODE MỚI - SIÊU NỊNH MẮT, NEON PHÁT SÁNG */
+  /* BẢNG MÀU DARK MODE MỚI - SIÊU NỊNH MẮT, ĐỘ TƯƠNG PHẢN CAO, CHỮ SÁNG RỰC RỠ */
   body.dark {
-    --bg: #0f172a; /* Nền xanh đen sâu thẳm slate */
-    --white: #1e293b; /* Nền các thẻ Card nổi bật hơn nền chính */
-    --text: #f8fafc; /* Chữ trắng tuyết, cực kỳ rõ nét */
-    --text-light: #94a3b8; /* Chữ phụ màu xám ngọc */
+    --bg: #0b1120; /* Nền xanh đen sâu thẳm, dịu mắt tuyệt đối */
+    --white: #1e293b; /* Nền các thẻ Card xám xanh nổi bật */
+    --text: #ffffff; /* Chữ trắng tinh khiết, cực kỳ rõ nét */
+    --text-light: #94a3b8; /* Chữ phụ màu xám sáng ngọc, dễ đọc */
     --border: #334155; /* Viền thẻ tinh tế */
-    --teal-light: #134e4a; /* Nền nhạt của các thẻ nhấn mạnh */
+    --teal-light: #134e4a; /* Nền nhạt cho các vùng chọn */
     --teal-dark: #5eead4; /* CHỮ TIÊU ĐỀ: Xanh ngọc Neon phát sáng */
-    --teal: #2dd4bf; /* Nút bấm xanh ngọc bích */
+    --teal: #2dd4bf; /* Nút bấm xanh ngọc bích sáng */
     --yellow-light: #451a03;
-    --pink-light: #4c0519; 
-    --pink: #f472b6; /* Điểm nhấn màu hồng neon */
-    --shadow: 0 8px 30px rgba(0,0,0,0.6);
+    --pink-light: #701a75; 
+    --pink: #f472b6; /* Điểm nhấn hồng Neon rực rỡ */
+    --shadow: 0 8px 30px rgba(0,0,0,0.8); /* Đổ bóng sâu hơn cho thẻ 3D */
   }
   body.dark .login-box { background: rgba(30, 41, 59, 0.85); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-  body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f8fafc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
+  body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
   body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; } /* Phiếu in luôn giữ nền trắng */
   
   /* Cứu cánh các Tag và màu cứng trong Code cũ cho Dark Mode */
   body.dark .badge-private { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
   body.dark .badge-group { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-  body.dark .stat-num-unpaid { color: #f87171 !important; }
+  body.dark .stat-num-unpaid { color: #f87171 !important; } /* Màu đỏ san hô Neon cho nợ tiền */
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; min-height: -webkit-fill-available; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; transition: background-color 0.3s, color 0.3s; }
 
   /* ===== MÀN HÌNH ĐĂNG NHẬP ===== */
-  #login-screen { position: fixed; inset: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg); background-image: url('anhngangmaytinh.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
-  .login-box { background: rgba(255, 255, 255, 0.85); padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s; }
-  @media (max-width: 640px) { #login-screen { background-image: url('anhngangdienthoai.png'); } }
+  #login-screen {
+    position: fixed; inset: 0; z-index: 999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background-color: var(--bg);
+    background-image: url('anhngangmaytinh.png'); 
+    background-size: cover; background-position: center; background-repeat: no-repeat;
+  }
+  .login-box {
+    background: rgba(255, 255, 255, 0.85); padding: 40px 30px; border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s;
+  }
+  @media (max-width: 640px) {
+    #login-screen { background-image: url('anhngangdienthoai.png'); }
+  }
 
   /* ===== NAV ===== */
   .nav { background: var(--white); border-bottom: 2px solid var(--teal-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(59,191,173,0.1); transform: translateZ(0); transition: 0.3s; }
@@ -62,14 +74,19 @@
   .nav-tab { padding: 6px 14px; border-radius: 20px; border: none; background: none; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: var(--text-light); cursor: pointer; transition: all .2s; }
   .nav-tab.active { background: var(--teal); color: #ffffff; }
   .nav-tab:hover:not(.active) { background: var(--teal-light); color: var(--teal-dark); }
+  
   .theme-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; transition: transform 0.2s; }
   .theme-btn:hover { transform: scale(1.1); }
 
   /* ===== MAIN & CARDS & ANIMATION ===== */
   .main { max-width: 960px; margin: 0 auto; padding: 24px 16px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  
   .page { display: none; }
   .page.active { display: block; animation: fadeSlideUp 0.35s ease-out; }
-  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px; transition: 0.3s; }
   .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
@@ -94,13 +111,25 @@
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal); }
   textarea { resize: vertical; min-height: 70px; }
   
-  select { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3748' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; padding-right: 32px !important; cursor: pointer; }
+  select {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3748' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+    padding-right: 32px !important; cursor: pointer;
+  }
 
   .type-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:20px; border:2px solid var(--border); cursor:pointer; font-weight:700; font-size:.85rem; transition:all .2s; flex:1; justify-content:center; color: var(--text); }
   .type-btn.active { border-color:var(--teal); background:var(--teal-light); color:var(--teal-dark); }
   .badge-private { background:#e8f4fd; color:#2b6cb0; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
   .badge-group { background:#fef3c7; color:#b45309; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
-  .student-check-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); padding: 8px 14px; border-radius: 20px; margin: 4px 4px 4px 0; cursor: pointer; border: 2px solid var(--border); font-size: 0.85rem; font-weight: 700; color: var(--text); transition: all 0.2s; }
+
+  /* ===== CSS CHO NÚT CHỌN HỌC SINH ĐIỂM DANH NHÓM ===== */
+  .student-check-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg); padding: 8px 14px; border-radius: 20px;
+    margin: 4px 4px 4px 0; cursor: pointer; border: 2px solid var(--border);
+    font-size: 0.85rem; font-weight: 700; color: var(--text); transition: all 0.2s;
+  }
   .student-check-badge:hover { border-color: var(--teal); }
   .student-check-badge input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; margin: 0; }
 
@@ -163,7 +192,7 @@
   
   .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
 
-  /* ===== MOBILE RESPONSIVE ĐÃ FIX LỖI ĐÈ CHỮ NAV ===== */
+  /* ===== MOBILE RESPONSIVE ===== */
   @media (max-width: 640px) {
     .nav { padding: 4px 8px; height: auto; min-height: 52px; display: flex; align-items: center; overflow: hidden; flex-wrap: nowrap; }
     .nav::-webkit-scrollbar { display: none; }
@@ -196,7 +225,6 @@
       <div style="font-size:.85rem;color:var(--text-light);margin-top:4px;font-weight:700;">powered by namtruemilk</div>
     </div>
     
-    <!-- NÚT GỌI HÀM ĐĂNG NHẬP CHUẨN GỐC -->
     <button onclick="loginGoogle()" style="display:flex;align-items:center;gap:10px;padding:12px 28px;background:white;color:#3c4043;border:2px solid #dadce0;border-radius:30px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="22" height="22">
       Đăng nhập với Google
@@ -237,11 +265,11 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
     
-    <!-- ĐẾM NGƯỢC THI VÀO 10 -->
+    <!-- TÍNH NĂNG MỚI: ĐẾM NGƯỢC THI VÀO 10 -->
     <div class="card" style="background: linear-gradient(135deg, var(--teal-light), var(--bg)); border: 2px solid var(--teal);">
       <div class="card-header" style="margin-bottom:10px;">
         <span class="card-title">⏳ Đếm ngược kỳ thi</span>
-        <input type="date" id="exam-date-input" onchange="saveExamDate()" style="width:auto; padding:5px 10px; font-size:0.8rem; background:var(--white);">
+        <input type="date" id="exam-date-input" onchange="saveExamDate()" style="width:auto; padding:5px 10px; font-size:0.8rem; background:var(--white); border:1px solid var(--border); border-radius:8px; color:var(--text);">
       </div>
       <div style="text-align:center; padding:10px 0;">
         <div id="countdown-display" style="font-size:2.5rem; font-weight:900; color:var(--pink); text-shadow: 0 2px 10px rgba(247,37,133,0.3);">-- Ngày</div>
@@ -419,8 +447,8 @@
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" onclick="printPhieu()">🖨️ In phiếu</button>
             <button class="btn btn-pink btn-sm" onclick="savePhieu()">💾 Lưu</button>
-            <!-- NÚT GỬI ZALO -->
-            <button class="btn btn-sm" style="background:#0068ff; color:white; border:none;" onclick="copyZaloMsg()">💬 Gửi Zalo</button>
+            <!-- TÍNH NĂNG MỚI: NÚT GỬI ZALO -->
+            <button class="btn btn-sm" style="background:#0068ff; color:white; border:none;" onclick="openZaloModal()">💬 Gửi Zalo</button>
           </div>
         </div>
         <div class="phieu-wrap"><div class="phieu" id="phieu-display"></div></div>
@@ -490,7 +518,7 @@
       <div class="form-group"><label>Lớp (Để chia nhóm)</label><input type="text" id="s-grade" placeholder="VD: Toán 9"></div>
       <div class="form-group"><label>Môn học</label><input type="text" id="s-subject"></div>
       
-      <!-- MỤC TIÊU ĐIỂM SỐ & BTVN -->
+      <!-- TÍNH NĂNG MỚI: MỤC TIÊU ĐIỂM SỐ VÀ NỢ BTVN -->
       <div class="form-group"><label>Mục tiêu điểm số</label><input type="number" id="s-target" placeholder="VD: 8.5" step="0.25"></div>
       <div class="form-group"><label>Đang nợ BTVN</label><input type="number" id="s-hw" value="0"></div>
 
@@ -545,6 +573,24 @@
   </div>
 </div>
 
+<!-- TÍNH NĂNG MỚI: CỬA SỔ CHỈNH SỬA TIN NHẮN ZALO -->
+<div class="modal-overlay" id="modal-zalo">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header">
+      <span class="modal-title">💬 Nội dung tin nhắn Zalo</span>
+      <button class="modal-close" onclick="closeModal('modal-zalo')">✕</button>
+    </div>
+    <div class="form-group full">
+      <label>Chỉnh sửa tin nhắn trước khi Copy:</label>
+      <textarea id="zalo-msg-content" style="min-height: 220px; line-height: 1.5; font-size: 0.95rem; margin-top:5px;"></textarea>
+    </div>
+    <div class="modal-actions" style="margin-top:20px; display:flex; gap:10px;">
+      <button class="btn btn-outline" style="flex:1; justify-content:center;" onclick="closeModal('modal-zalo')">Hủy</button>
+      <button class="btn btn-primary" style="flex:1; justify-content:center; background:#0068ff; border-color:#0068ff;" onclick="copyZaloContent()">📋 Copy tin nhắn</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let revenueChartInstance = null;
 let gradeChartInstance = null;
@@ -586,7 +632,7 @@ function populateMonthSelects() {
   });
 }
 
-// KHỐI ĐĂNG NHẬP (ĐÃ PHỤC HỒI NGUYÊN BẢN CỦA BẠN ĐỂ TRÁNH LỖI)
+// ===== FIREBASE INIT =====
 const firebaseConfig = {
   apiKey: "AIzaSyD_Bf1lv5o4iS0MQO3kByCXWaNOfBESmpc",
   authDomain: "namtruemilk-372004.firebaseapp.com",
@@ -623,10 +669,11 @@ async function loadDb() {
     const doc = await firestore.collection('users').doc(currentUser.uid).get();
     if (doc.exists) {
       db = doc.data();
-      db.students = db.students || []; db.attendance = db.attendance || {}; db.phieus = db.phieus || []; db.grades = db.grades || {};
+      db.students = db.students || []; db.attendance = db.attendance || {}; db.phieus = db.phieus || []; 
+      db.grades = db.grades || {}; db.examDate = db.examDate || '';
     } else db = { students: [], attendance: {}, phieus: [], grades: {}, examDate: '' };
   } catch(e) {
-    db = JSON.parse(localStorage.getItem('giasu_db_' + currentUser.uid) || '{"students":[],"attendance":{},"phieus":[],"grades":{}}');
+    db = JSON.parse(localStorage.getItem('giasu_db_' + currentUser.uid) || '{"students":[],"attendance":{},"phieus":[],"grades":{},"examDate":""}');
   }
   populateMonthSelects();
 }
@@ -649,19 +696,12 @@ function showApp() {
 function hideApp() {
   document.getElementById('login-screen').style.display = 'flex'; document.getElementById('user-bar').style.display = 'none';
   document.querySelector('.nav').style.display = 'none'; document.querySelector('.main').style.display = 'none';
-  db = { students: [], attendance: {}, phieus: [], grades: {} };
+  db = { students: [], attendance: {}, phieus: [], grades: {}, examDate: '' };
 }
 
 auth.onAuthStateChanged(async user => {
-  if (user) { 
-    currentUser = user; 
-    await loadDb(); 
-    showApp(); 
-  } 
-  else { 
-    currentUser = null; 
-    hideApp(); 
-  }
+  if (user) { currentUser = user; await loadDb(); showApp(); } 
+  else { currentUser = null; hideApp(); }
 });
 
 function showPage(id) {
@@ -680,7 +720,7 @@ function showPage(id) {
   if (id === 'page-stats') renderStats();
 }
 
-// ===== TRANG TỔNG QUAN & ĐẾM NGƯỢC =====
+// ===== TRANG TỔNG QUAN & ĐẾM NGƯỢC THI VÀO 10 =====
 function renderHome() {
   const total = db.students.length;
   let selectedMonth = document.getElementById('home-month').value;
@@ -733,13 +773,19 @@ function updateCountdown() {
   const el = document.getElementById('countdown-display');
   const sub = document.getElementById('countdown-sub');
   if(!db.examDate) { el.textContent = '-- Ngày'; sub.textContent = 'Hãy chọn ngày thi ở góc trên'; return; }
-  const diff = new Date(db.examDate).getTime() - new Date().getTime();
+  
+  const today = new Date(); today.setHours(0,0,0,0);
+  const exam = new Date(db.examDate); exam.setHours(0,0,0,0);
+  
+  const diff = exam.getTime() - today.getTime();
   const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  
   if(days > 0) { el.textContent = `Còn ${days} ngày`; sub.textContent = 'Quyết tâm đỗ Nguyện vọng 1!'; }
+  else if(days === 0) { el.textContent = `Hôm nay thi!`; sub.textContent = 'Chúc các con tự tin, làm bài tốt!'; }
   else { el.textContent = 'Đã thi xong!'; sub.textContent = 'Chúc các con đạt kết quả tốt nhất'; }
 }
 
-// ===== TRANG HỌC SINH & NỢ BTVN =====
+// ===== TRANG HỌC SINH & QUẢN LÝ BTVN =====
 let currentType = 'private';
 function selectType(type) {
   currentType = type;
@@ -822,7 +868,7 @@ function deleteStudent(id) {
   save(); renderStudents(); renderHome(); renderPhieuStudentSelect();
 }
 
-// ===== QUẢN LÝ NHÓM LỚP =====
+// ===== GROUPS PAGE =====
 function renderGroups() {
   const groups = {};
   db.students.forEach(s => {
@@ -868,7 +914,7 @@ function bulkAttend(gIndex, gradeName) {
   save(); alert('✅ Đã điểm danh thành công!');
 }
 
-// ===== ĐIỂM DANH CÁ NHÂN =====
+// ===== ATTENDANCE PAGE =====
 function renderAttStudents() {
   const el = document.getElementById('att-student-list');
   if (!db.students.length) { el.innerHTML = `<div class="empty-state"><p>Thêm học sinh trước</p></div>`; return; }
@@ -935,7 +981,7 @@ function saveMultiSession() {
   save(); closeModal('modal-multi-session'); renderCalendar();
 }
 
-// ===== TÍNH NĂNG MỚI: SỔ ĐIỂM KÈM VẠCH MỤC TIÊU =====
+// ===== GRADES PAGE (ĐÃ TÍCH HỢP VẠCH MỤC TIÊU) =====
 function renderGradeStudentSelect() {
   document.getElementById('grade-student').innerHTML = '<option value="">-- Chọn học sinh --</option>' + db.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
   document.getElementById('grade-content').style.display = 'none';
@@ -988,7 +1034,7 @@ function saveGrade() {
 }
 function deleteGrade(sid, gid) { if(!confirm('Xóa bài kiểm tra này?')) return; db.grades[sid] = db.grades[sid].filter(g => g.id !== gid); save(); renderGrades(); }
 
-// ===== TẠO PHIẾU VÀ ZALO =====
+// ===== TẠO PHIẾU VÀ TỰ ĐỘNG ZALO =====
 function handleQRUpload(event) {
   const file = event.target.files[0]; if (!file) return; 
   const reader = new FileReader(); 
@@ -1053,7 +1099,6 @@ function buildPhieuHTML(d) {
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
 
-// HÀM IN FIX LỖI CRASH KHI CÓ THẺ BODY
 function printDoc(html) {
   const win = window.open('', '_blank');
   let docHtml = '<!DOCTYPE html><html><head>';
@@ -1066,9 +1111,10 @@ function printDoc(html) {
   setTimeout(() => { win.print(); }, 600);
 }
 
-// TÍNH NĂNG MỚI: COPY TIN NHẮN ZALO
-function copyZaloMsg() {
+// ===== TÍNH NĂNG MỚI: MỞ MODAL ZALO TRƯỚC KHI COPY =====
+function openZaloModal() {
   const sid = document.getElementById('phieu-student').value;
+  if(!sid) return alert('Vui lòng chọn học sinh trước!');
   const s = db.students.find(x => x.id === sid);
   const m = document.getElementById('phieu-month').value;
   const total = document.getElementById('phieu-total-display').value;
@@ -1091,10 +1137,17 @@ function copyZaloMsg() {
 
   const msg = `Dạ em chào anh/chị, em gửi báo cáo học tập tháng ${parseInt(m.split('-')[1])} của bé ${s.name} ạ:\n- Số buổi đi học: ${p+g} buổi.${avgStr}\n- Tổng học phí: ${total}${hwStr}\n\nAnh/chị xem chi tiết phiếu ở link hoặc quét mã QR thanh toán giúp em nhé. Em cảm ơn ạ!`;
   
+  document.getElementById('zalo-msg-content').value = msg;
+  openModal('modal-zalo');
+}
+
+function copyZaloContent() {
+  const msg = document.getElementById('zalo-msg-content').value;
   navigator.clipboard.writeText(msg).then(() => {
     alert('✅ Đã Copy tin nhắn thành công! Mở Zalo dán vào khung chat ngay thôi.');
+    closeModal('modal-zalo');
   }).catch(err => {
-    alert('Không thể copy tự động, bạn hãy bôi đen copy đoạn sau nhé:\n\n' + msg);
+    alert('Không thể copy tự động, bạn hãy bôi đen copy thủ công nhé.');
   });
 }
 
@@ -1140,7 +1193,7 @@ function viewPhieu(id) {
 
 function deletePhieu(id) { db.phieus = db.phieus.filter(p => p.id !== id); save(); renderPhieuHistory(); }
 
-// ===== TRANG THỐNG KÊ =====
+// ===== STATS PAGE =====
 function renderStats() {
   const mode = document.getElementById('stats-mode').value;
   if (mode === 'year') { document.getElementById('stats-view-year').style.display = 'block'; document.getElementById('stats-view-month').style.display = 'none'; renderStatsYearly(); } 
