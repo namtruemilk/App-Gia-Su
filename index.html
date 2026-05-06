@@ -6,6 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Quản Lý Học Phí — Gia Sư</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tích hợp thư viện Flatpickr (Lịch Tiếng Việt) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <style>
@@ -245,6 +249,40 @@
   .btn-zalo { background: #0068ff; color: white; border: none; padding: 9px 18px; border-radius: 30px; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
   .btn-zalo:hover { background: #0052cc; transform: translateY(-1px); }
 
+  /* ===== CẬP NHẬT GIAO DIỆN MỤC TIÊU ĐIỂM SỐ (FIX DARK MODE) ===== */
+  .target-box { background: var(--yellow-light); border: 2px solid #fbbf24; border-radius: 12px; padding: 12px; }
+  .target-label { color: #b45309; font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; }
+  .target-input { flex: 1; border-color: #fbbf24 !important; }
+  .target-btn { background: #fbbf24; color: #78350f; border: none; white-space: nowrap; font-weight: 700; padding: 8px 12px; border-radius: 8px; font-family: inherit; font-size: 0.85rem; cursor: pointer; transition: 0.2s;}
+  .target-btn:hover { background: #f59e0b; }
+  .target-status { font-size: 0.75rem; margin-top: 6px; color: #b45309; font-weight: 700; }
+  
+  body.dark .target-box { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); }
+  body.dark .target-label { color: #fcd34d; }
+  body.dark .target-input { border-color: rgba(245, 158, 11, 0.4) !important; background: rgba(0,0,0,0.2) !important; color: #fff !important; }
+  body.dark .target-btn { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+  body.dark .target-btn:hover { background: rgba(245, 158, 11, 0.3); }
+  body.dark .target-status { color: #fcd34d; }
+
+  /* ===== FIX HIỂN THỊ LỊCH FLATPICKR TRÊN MOBILE/DARK MODE ===== */
+  .flatpickr-input[readonly] { background-color: var(--white); color: var(--text); cursor: pointer; }
+  body.dark .flatpickr-input[readonly] { background-color: #1e293b; color: #ffffff; border-color: #334155; }
+  
+  body.dark .flatpickr-calendar { background: #1e293b; border: 1px solid #334155; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+  body.dark .flatpickr-calendar.arrowTop::before { border-bottom-color: #334155; }
+  body.dark .flatpickr-calendar.arrowTop::after { border-bottom-color: #1e293b; }
+  body.dark .flatpickr-calendar.arrowBottom::before { border-top-color: #334155; }
+  body.dark .flatpickr-calendar.arrowBottom::after { border-top-color: #1e293b; }
+  body.dark .flatpickr-day { color: #e2e8f0; }
+  body.dark .flatpickr-day:hover, body.dark .flatpickr-day:focus { background: #334155; border-color: #334155; color: #fff; }
+  body.dark .flatpickr-day.selected, body.dark .flatpickr-day.startRange, body.dark .flatpickr-day.endRange { background: #2dd4bf; border-color: #2dd4bf; color: #0b1120; }
+  body.dark .flatpickr-day.today { border-color: #f472b6; }
+  body.dark .flatpickr-months .flatpickr-month { color: #e2e8f0; fill: #e2e8f0; }
+  body.dark .flatpickr-current-month .flatpickr-monthDropdown-months { background: #1e293b; color: #e2e8f0; }
+  body.dark .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month { background-color: #1e293b; }
+  body.dark span.flatpickr-weekday { color: #94a3b8; }
+  body.dark .flatpickr-day.flatpickr-disabled, body.dark .flatpickr-day.flatpickr-disabled:hover { color: #475569; }
+
   @media (max-width: 640px) {
     .nav { padding: 4px 8px; height: auto; min-height: 52px; display: flex; align-items: center; overflow: hidden; }
     .nav::-webkit-scrollbar { display: none; }
@@ -257,13 +295,8 @@
     .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px; }
     .stat-card { padding: 12px 8px; border-radius: 12px; }
     select { max-width: 100%; box-sizing: border-box; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-    
-    /* FIX TRÀN MÀN HÌNH Ở ĐÂY */
     .form-grid { grid-template-columns: minmax(0, 1fr); }
     input, select, textarea { max-width: 100%; min-width: 0; }
-    input[type="date"] { display: block; max-width: 100%; }
-    /* KẾT THÚC FIX */
-
     .student-grid { grid-template-columns: 1fr; gap: 10px; }
     .phieu { width: 100% !important; max-width: 100% !important; }
     .modal-overlay { align-items: flex-end; padding: 0; }
@@ -332,7 +365,7 @@
           <div class="exam-cd-title">⏳ Đếm ngược kỳ thi</div>
           <div class="exam-cd-subtitle" id="exam-cd-name">Thi vào lớp 10</div>
         </div>
-        <button class="exam-cd-setting-btn" onclick="openModal('modal-exam-settings')">⚙️ Cài đặt ngày thi</button>
+        <button class="exam-cd-setting-btn" onclick="openExamModal()">⚙️ Cài đặt ngày thi</button>
       </div>
       <div id="exam-countdown-content">
         <div class="exam-cd-no-date">Chưa cài đặt ngày thi. Nhấn "Cài đặt ngày thi" để bắt đầu!</div>
@@ -461,9 +494,9 @@
       <div class="card">
         <h4 style="color:var(--teal-dark); font-weight:800; margin-bottom:12px;">✏️ Nhập điểm mới</h4>
         <div class="form-grid">
-          <input type="date" id="grade-date" class="full">
+          <!-- Thay thế input type="date" thành input thường để Flatpickr xử lý -->
+          <input type="text" id="grade-date" class="full" placeholder="Chọn ngày...">
           
-          <!-- [MỚI] INPUT TÊN MÔN HỌC -->
           <input type="text" id="grade-subject-input" placeholder="Tên môn học (VD: Toán, Lý)..." class="full" list="subject-list">
           <datalist id="subject-list">
             <option value="Toán"></option>
@@ -475,15 +508,17 @@
 
           <input type="text" id="grade-name" placeholder="Tên bài (VD: 15 phút, Giữa kỳ)..." class="full">
           <input type="number" id="grade-score" placeholder="Điểm số (0-10)..." class="full" step="0.25">
-          <!-- [MỚI] TARGET SCORE INPUT -->
-          <div class="form-group full" style="background: var(--yellow-light); border: 2px solid #fbbf24; border-radius: 12px; padding: 12px;">
-            <label style="color: #b45309;">🎯 Mục tiêu điểm số (vạch an toàn trên biểu đồ)</label>
+          
+          <!-- Cập nhật class CSS để tương thích Dark Mode -->
+          <div class="form-group full target-box">
+            <label class="target-label">🎯 Mục tiêu điểm số (vạch an toàn trên biểu đồ)</label>
             <div style="display:flex; gap:10px; align-items:center;">
-              <input type="number" id="grade-target" placeholder="VD: 8.5" step="0.25" min="0" max="10" style="flex:1; border-color: #fbbf24;">
-              <button class="btn btn-sm" style="background:#fbbf24; color:#78350f; border:none; white-space:nowrap;" onclick="saveGradeTarget()">💾 Lưu mục tiêu</button>
+              <input type="number" id="grade-target" placeholder="VD: 8.5" step="0.25" min="0" max="10" class="target-input">
+              <button class="target-btn" onclick="saveGradeTarget()">💾 Lưu mục tiêu</button>
             </div>
-            <div id="grade-target-status" style="font-size:0.75rem; margin-top:4px; color:#b45309;"></div>
+            <div id="grade-target-status" class="target-status"></div>
           </div>
+          
           <button class="btn btn-primary full" onclick="saveGrade()">💾 Lưu điểm số</button>
         </div>
       </div>
@@ -696,11 +731,11 @@
       </div>
       <div class="form-group full">
         <label>📅 Ngày thi dự kiến</label>
-        <input type="date" id="exam-date-input">
+        <input type="text" id="exam-date-input" placeholder="Chọn ngày...">
       </div>
       <div class="form-group full">
         <label>📅 Ngày bắt đầu ôn thi (để tính %)</label>
-        <input type="date" id="exam-start-input">
+        <input type="text" id="exam-start-input" placeholder="Chọn ngày...">
       </div>
     </div>
     <div class="modal-actions" style="margin-top:20px; display:flex; gap:10px;">
@@ -934,13 +969,26 @@ function renderGrades() {
   const sid = document.getElementById('grade-student').value;
   if(!sid) { document.getElementById('grade-content').style.display = 'none'; return; }
   document.getElementById('grade-content').style.display = 'block';
-  document.getElementById('grade-date').valueAsDate = new Date();
+
+  // [MỚI] Sử dụng Flatpickr cho ô chọn ngày (Tiếng Việt & dd/mm/yyyy & fix tràn)
+  if (!window.gradeDatePicker) {
+    window.gradeDatePicker = flatpickr("#grade-date", {
+      dateFormat: "Y-m-d", // Giá trị ngầm định để tính toán chuẩn
+      altInput: true,      // Hiển thị một input khác thay thế
+      altFormat: "d/m/Y",  // Hiển thị ở định dạng dd/mm/yyyy
+      locale: "vn",        // Cài đặt Tiếng Việt
+      disableMobile: true, // Ép hệ thống dùng lịch Flatpickr thay vì lịch máy để tránh lỗi
+      defaultDate: new Date()
+    });
+  } else {
+    window.gradeDatePicker.setDate(new Date());
+  }
 
   db.grades = db.grades || {};
   const allGrades = db.grades[sid] || [];
   allGrades.sort((a,b) => new Date(a.date) - new Date(b.date));
 
-  // [MỚI] Lấy danh sách các môn học để tạo Tab Lọc
+  // Lấy danh sách các môn học để tạo Tab Lọc
   const subjects = [...new Set(allGrades.map(g => g.subject || 'Chung'))];
   if (subjects.length > 0 && !subjects.includes(currentGradeSubject) && currentGradeSubject !== 'Tất cả') {
       currentGradeSubject = 'Tất cả';
@@ -962,7 +1010,7 @@ function renderGrades() {
       document.getElementById('grade-subject-input').value = currentGradeSubject;
   }
 
-  // [MỚI] Xử lý hiển thị mục tiêu theo môn học
+  // Xử lý hiển thị mục tiêu theo môn học
   const targets = db.gradeTargets || {};
   let targetObj = targets[sid];
   // Chuyển đổi dữ liệu cũ (nếu mục tiêu đang lưu dưới dạng số chung)
@@ -976,7 +1024,7 @@ function renderGrades() {
 
   if (target) {
     document.getElementById('grade-target').value = target;
-    document.getElementById('grade-target-status').textContent = `✅ Mục tiêu hiện tại (Môn ${targetKey}): ${target} điểm`;
+    document.getElementById('grade-target-status').innerHTML = `✅ Mục tiêu hiện tại (Môn ${targetKey}): <b>${target} điểm</b>`;
   } else {
     document.getElementById('grade-target').value = '';
     document.getElementById('grade-target-status').textContent = 'Chưa đặt mục tiêu';
@@ -1043,7 +1091,7 @@ function renderGrades() {
   });
 }
 
-// [MỚI] Lưu mục tiêu điểm số (Hỗ trợ lưu theo môn học)
+// Lưu mục tiêu điểm số (Hỗ trợ lưu theo môn học)
 function saveGradeTarget() {
   const sid = document.getElementById('grade-student').value;
   if(!sid) return alert('Vui lòng chọn học sinh trước!');
@@ -1059,7 +1107,7 @@ function saveGradeTarget() {
   db.gradeTargets[sid][targetKey] = target;
   
   save();
-  document.getElementById('grade-target-status').textContent = `✅ Đã lưu mục tiêu (Môn ${targetKey}): ${target} điểm`;
+  document.getElementById('grade-target-status').innerHTML = `✅ Đã lưu mục tiêu (Môn ${targetKey}): <b>${target} điểm</b>`;
   renderGrades();
 }
 
@@ -1136,10 +1184,7 @@ function renderHome() {
     </div>
   `).join('') : '<div class="empty-state"><p>Chưa có học sinh nào</p></div>';
 
-  // [MỚI] Render exam countdown
   renderExamCountdown();
-
-  // [MỚI] Render homework warnings
   renderHomeworkWarnings();
 }
 
@@ -1175,7 +1220,6 @@ function renderExamCountdown() {
   const weeks = Math.floor(diffDays / 7);
   const days = diffDays % 7;
   const hours = new Date().getHours();
-  const mins = new Date().getMinutes();
 
   let progressPercent = 0;
   let progressText = '';
@@ -1189,8 +1233,6 @@ function renderExamCountdown() {
       progressText = `Đã ôn thi ${progressPercent}% lộ trình`;
     }
   }
-
-  let urgencyColor = diffDays > 60 ? '#3bbfad' : diffDays > 30 ? '#fbbf24' : '#f87171';
 
   contentEl.innerHTML = `
     <div class="exam-cd-numbers">
@@ -1242,21 +1284,18 @@ function clearExamSettings() {
   renderExamCountdown();
 }
 
-// Mở modal và điền dữ liệu hiện tại
-document.getElementById('modal-exam-settings').addEventListener('click', function(e) {
-  // pre-fill khi mở
-});
-
 function openExamModal() {
   const s = db.examSettings || {};
   document.getElementById('exam-name-input').value = s.name || 'Thi vào lớp 10';
-  document.getElementById('exam-date-input').value = s.date || '';
-  document.getElementById('exam-start-input').value = s.startDate || '';
+  
+  if (!window.examDateDp) window.examDateDp = flatpickr("#exam-date-input", { dateFormat: "Y-m-d", altInput: true, altFormat: "d/m/Y", locale: "vn", disableMobile: true });
+  if (s.date) window.examDateDp.setDate(s.date); else window.examDateDp.clear();
+
+  if (!window.examStartDp) window.examStartDp = flatpickr("#exam-start-input", { dateFormat: "Y-m-d", altInput: true, altFormat: "d/m/Y", locale: "vn", disableMobile: true });
+  if (s.startDate) window.examStartDp.setDate(s.startDate); else window.examStartDp.clear();
+
   openModal('modal-exam-settings');
 }
-
-// Override nút cài đặt để pre-fill
-document.querySelector('.exam-cd-setting-btn').onclick = function() { openExamModal(); };
 
 // ===== [MỚI] TÍNH NĂNG 3: HOMEWORK TRACKER =====
 function setHomework(status) {
@@ -1347,22 +1386,18 @@ function generateZaloMessageContent() {
   const monthNum = parseInt(month.split('-')[1]);
   const yearNum = month.split('-')[0];
 
-  // Lấy số buổi
   const p = parseInt(document.getElementById('phieu-private-sessions').value) || 0;
   const g = parseInt(document.getElementById('phieu-group-sessions').value) || 0;
   const sessions = p + g;
   const total = p * (s.pricePrivate || s.price || 0) + g * (s.priceGroup || s.price || 0);
 
-  // Lấy điểm trung bình
   const grades = db.grades?.[sid] || [];
   let avgText = '';
   if(grades.length > 0) {
-    const avg = (grades.reduce((sum, g) => sum + g.score, 0) / grades.length).toFixed(1);
+    const avg = (grades.reduce((sum, gr) => sum + gr.score, 0) / grades.length).toFixed(1);
     let targetNote = '';
-    // Thích ứng với lưu mục tiêu theo môn
     const targetObj = db.gradeTargets?.[sid];
     if (targetObj) {
-      // Lấy mục tiêu chung làm đại diện (nếu có)
       const target = typeof targetObj === 'number' ? targetObj : targetObj['Chung'];
       if(target) {
          targetNote = (parseFloat(avg) >= target ? ` (đã đạt mục tiêu 🎯)` : ` (mục tiêu ${target} - đang nỗ lực 💪)`);
@@ -1371,7 +1406,6 @@ function generateZaloMessageContent() {
     avgText = `Điểm trung bình các bài kiểm tra là *${avg}*${targetNote}. `;
   }
 
-  // Tình trạng bài tập
   const hwStatus = db.homework?.[sid]?.[month];
   let hwText = '';
   if(hwStatus === 'done') hwText = 'Bé học bài và làm bài tập đầy đủ. ';
@@ -1412,7 +1446,6 @@ function copyZaloMessage() {
       setTimeout(() => confirm.style.display = 'none', 3000);
     });
   } else {
-    // Fallback
     const el = document.getElementById('zalo-message-text');
     el.select();
     document.execCommand('copy');
