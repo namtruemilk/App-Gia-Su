@@ -6,9 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Quản Lý Học Phí — Gia Sư</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- Thêm thư viện Chart.js để vẽ biểu đồ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Thêm thư viện jsQR để tự động nhận diện và cắt mã QR -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <style>
   :root {
@@ -21,36 +19,31 @@
     --shadow: 0 4px 24px rgba(59,191,173,0.13);
     --radius: 18px;
   }
-  
-  /* BẢNG MÀU DARK MODE MỚI - SIÊU NỊNH MẮT, ĐỘ TƯƠNG PHẢN CAO, CHỮ SÁNG RỰC RỠ */
   body.dark {
-    --bg: #0b1120; /* Nền xanh đen sâu thẳm, dịu mắt tuyệt đối */
-    --white: #1e293b; /* Nền các thẻ Card xám xanh nổi bật */
-    --text: #ffffff; /* Chữ trắng tinh khiết, cực kỳ rõ nét */
-    --text-light: #94a3b8; /* Chữ phụ màu xám sáng ngọc, dễ đọc */
-    --border: #334155; /* Viền thẻ tinh tế */
-    --teal-light: #134e4a; /* Nền nhạt cho các vùng chọn */
-    --teal-dark: #5eead4; /* CHỮ TIÊU ĐỀ: Xanh ngọc Neon phát sáng */
-    --teal: #2dd4bf; /* Nút bấm xanh ngọc bích sáng */
+    --bg: #0b1120;
+    --white: #1e293b;
+    --text: #ffffff;
+    --text-light: #94a3b8;
+    --border: #334155;
+    --teal-light: #134e4a;
+    --teal-dark: #5eead4;
+    --teal: #2dd4bf;
     --yellow-light: #451a03;
     --pink-light: #701a75; 
-    --pink: #f472b6; /* Điểm nhấn hồng Neon rực rỡ */
-    --shadow: 0 8px 30px rgba(0,0,0,0.8); /* Đổ bóng sâu hơn cho thẻ 3D */
+    --pink: #f472b6;
+    --shadow: 0 8px 30px rgba(0,0,0,0.8);
   }
   body.dark .login-box { background: rgba(30, 41, 59, 0.85); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
   body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
-  body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; } /* Phiếu in luôn giữ nền trắng */
-  
-  /* Cứu cánh các Tag và màu cứng trong Code cũ cho Dark Mode */
+  body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; }
   body.dark .badge-private { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
   body.dark .badge-group { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-  body.dark .stat-num-unpaid { color: #f87171 !important; } /* Màu đỏ san hô Neon cho nợ tiền */
+  body.dark .stat-num-unpaid { color: #f87171 !important; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; min-height: -webkit-fill-available; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; transition: background-color 0.3s, color 0.3s; }
 
-  /* ===== MÀN HÌNH ĐĂNG NHẬP ===== */
   #login-screen {
     position: fixed; inset: 0; z-index: 999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -67,32 +60,24 @@
     #login-screen { background-image: url('anhngangdienthoai.png'); }
   }
 
-  /* ===== NAV ===== */
   .nav { background: var(--white); border-bottom: 2px solid var(--teal-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(59,191,173,0.1); transform: translateZ(0); transition: 0.3s; }
   .nav-brand { font-size: 0.95rem; font-weight: 900; color: var(--teal-dark); display: flex; align-items: center; gap: 8px; }
   .nav-tabs { display: flex; gap: 4px; }
   .nav-tab { padding: 6px 14px; border-radius: 20px; border: none; background: none; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: var(--text-light); cursor: pointer; transition: all .2s; }
   .nav-tab.active { background: var(--teal); color: #ffffff; }
   .nav-tab:hover:not(.active) { background: var(--teal-light); color: var(--teal-dark); }
-  
   .theme-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; transition: transform 0.2s; }
   .theme-btn:hover { transform: scale(1.1); }
 
-  /* ===== MAIN & CARDS & ANIMATION ===== */
   .main { max-width: 960px; margin: 0 auto; padding: 24px 16px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  
   .page { display: none; }
   .page.active { display: block; animation: fadeSlideUp 0.35s ease-out; }
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
   .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px; transition: 0.3s; }
   .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
   .card-title { font-size: 1.1rem; font-weight: 800; color: var(--teal-dark); }
 
-  /* ===== BUTTONS ===== */
   .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 30px; border: none; font-family: inherit; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all .2s; }
   .btn-primary { background: var(--teal); color: #ffffff; }
   .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,191,173,0.35); }
@@ -102,7 +87,6 @@
   .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
   .btn-danger { background: #fed7d7; color: #c53030; }
 
-  /* ===== FORM ===== */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
   .form-group.full { grid-column: 1/-1; }
@@ -110,7 +94,6 @@
   input, select, textarea { padding: 9px 13px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.9rem; color: var(--text); background: var(--white); transition: all .2s; width: 100%; box-sizing: border-box; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal); }
   textarea { resize: vertical; min-height: 70px; }
-  
   select {
     -webkit-appearance: none; -moz-appearance: none; appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3748' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -123,7 +106,6 @@
   .badge-private { background:#e8f4fd; color:#2b6cb0; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
   .badge-group { background:#fef3c7; color:#b45309; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
 
-  /* ===== CSS CHO NÚT CHỌN HỌC SINH ĐIỂM DANH NHÓM ===== */
   .student-check-badge {
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--bg); padding: 8px 14px; border-radius: 20px;
@@ -133,7 +115,6 @@
   .student-check-badge:hover { border-color: var(--teal); }
   .student-check-badge input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; margin: 0; }
 
-  /* ===== STUDENT LIST ===== */
   .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
   .student-card { background: var(--white); border-radius: 14px; border: 2px solid var(--border); padding: 16px; cursor: pointer; transition: all .2s; position: relative; }
   .student-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,191,173,0.15); }
@@ -141,7 +122,6 @@
   .student-name { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 4px; }
   .student-meta { font-size: 0.8rem; color: var(--text-light); }
 
-  /* ===== ATTENDANCE & CALENDAR ===== */
   .month-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
   .month-nav { background: var(--teal-light); border: none; color: var(--teal-dark); font-size: 1.2rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: 900; }
   .month-label { font-weight: 800; font-size: 1.05rem; color: var(--text); }
@@ -159,7 +139,6 @@
   body.dark .sticky-note { color: var(--text-light); }
   .multi-badge { position: absolute; top: -5px; right: -5px; background: #2d3748; color: white; font-size: 0.65rem; font-weight: 900; padding: 2px 6px; border-radius: 10px; z-index: 2; }
 
-  /* ===== PHIEU & STATS ===== */
   .phieu-wrap { display: flex; justify-content: center; }
   .phieu { width: 340px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.13); font-family: 'Quicksand', sans-serif; background: white; }
   .phieu-header { background: var(--teal); padding: 22px 20px 18px; text-align: center; color: white; }
@@ -178,10 +157,8 @@
   .stat-num-unpaid { font-size: clamp(0.85rem, 2.2vw, 1.6rem); font-weight: 900; color: #e53e3e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .stat-label { font-size: 0.78rem; font-weight: 700; color: var(--text-light); margin-top: 2px; }
 
-  /* ===== CHỮ KÝ MOBILE ===== */
   .mobile-footer { display: none; text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--text-light); padding-top: 10px; padding-bottom: 20px; opacity: 0.7; }
 
-  /* ===== MODAL ===== */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(3px); }
   .modal-overlay.open { display: flex; animation: fadeInModal 0.2s ease; }
   @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
@@ -189,20 +166,92 @@
   .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
   .modal-title { font-size: 1.05rem; font-weight: 800; color: var(--teal-dark); }
   .modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-light); line-height: 1; }
-  
   .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
 
-  /* ===== MOBILE RESPONSIVE (ĐÃ FIX LỖI OVERLAP THEME ICON) ===== */
+  /* ===== TÍNH NĂNG MỚI 1: EXAM COUNTDOWN WIDGET ===== */
+  .exam-countdown-widget {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(15, 52, 96, 0.4);
+  }
+  .exam-countdown-widget::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px; background: rgba(59,191,173,0.12);
+    border-radius: 50%; pointer-events: none;
+  }
+  .exam-countdown-widget::after {
+    content: ''; position: absolute; bottom: -30px; left: -30px;
+    width: 120px; height: 120px; background: rgba(247,37,133,0.1);
+    border-radius: 50%; pointer-events: none;
+  }
+  .exam-cd-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .exam-cd-title { font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+  .exam-cd-subtitle { font-size: 1rem; font-weight: 900; color: #fff; margin-top: 4px; }
+  .exam-cd-setting-btn {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8); border-radius: 20px; padding: 5px 12px;
+    font-size: 0.75rem; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .exam-cd-setting-btn:hover { background: rgba(255,255,255,0.2); }
+  .exam-cd-numbers { display: flex; gap: 12px; justify-content: center; margin: 12px 0; }
+  .exam-cd-unit { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .exam-cd-num {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 14px; width: 100%; padding: 12px 6px;
+    font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; color: #fff;
+    text-align: center; letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(59,191,173,0.5);
+    transition: all 0.3s;
+  }
+  .exam-cd-num.highlight { color: #3bbfad; border-color: rgba(59,191,173,0.5); background: rgba(59,191,173,0.15); }
+  .exam-cd-label { font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.5); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .exam-cd-progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 14px; overflow: hidden; }
+  .exam-cd-progress-fill { height: 100%; background: linear-gradient(90deg, #3bbfad, #f72585); border-radius: 10px; transition: width 1s ease; }
+  .exam-cd-progress-text { font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 700; text-align: right; margin-top: 6px; }
+  .exam-cd-no-date { text-align: center; color: rgba(255,255,255,0.6); font-size: 0.9rem; font-weight: 700; padding: 20px 0; }
+
+  /* ===== TÍNH NĂNG MỚI 2: HOMEWORK TRACKER ===== */
+  .hw-tracker-section { margin-top: 16px; padding-top: 16px; border-top: 2px dashed var(--border); }
+  .hw-tracker-title { font-size: 0.85rem; font-weight: 800; color: var(--teal-dark); margin-bottom: 10px; }
+  .hw-btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .hw-btn {
+    padding: 6px 14px; border-radius: 20px; border: 2px solid var(--border);
+    background: var(--bg); font-family: inherit; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; color: var(--text); transition: all 0.2s;
+  }
+  .hw-btn.active-done { background: #f0fff4; border-color: #38a169; color: #2f855a; }
+  .hw-btn.active-missing { background: #fffbea; border-color: #d69e2e; color: #b7791f; }
+  .hw-btn.active-none { background: #fff5f5; border-color: #fc8181; color: #c53030; }
+  .hw-warning-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #fff5f5; border: 1.5px solid #fc8181; color: #c53030;
+    font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 20px;
+    margin-left: 8px;
+  }
+
+  /* ===== TÍNH NĂNG MỚI 4: ZALO MESSAGE STYLE ===== */
+  .zalo-preview-box {
+    background: var(--bg); border: 2px solid var(--border); border-radius: 14px;
+    padding: 16px; margin: 14px 0; font-size: 0.88rem; line-height: 1.7;
+    color: var(--text); white-space: pre-wrap; word-break: break-word;
+    max-height: 240px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  .zalo-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .btn-zalo { background: #0068ff; color: white; border: none; padding: 9px 18px; border-radius: 30px; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+  .btn-zalo:hover { background: #0052cc; transform: translateY(-1px); }
+
   @media (max-width: 640px) {
-    .nav { padding: 4px 8px; height: auto; min-height: 52px; display: flex; align-items: center; overflow: hidden; } /* Chặn scroll cho cả thanh nav */
+    .nav { padding: 4px 8px; height: auto; min-height: 52px; display: flex; align-items: center; overflow: hidden; }
     .nav::-webkit-scrollbar { display: none; }
     .nav-brand { display: none; }
-    .nav-tabs { flex: 1; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; gap: 4px; padding: 6px 0; margin-right: 4px; } /* Đẩy thanh scroll sang tabs */
+    .nav-tabs { flex: 1; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; gap: 4px; padding: 6px 0; margin-right: 4px; }
     .nav-tab { padding: 8px 12px; font-size: 0.75rem; flex: 0 0 auto; border-radius: 12px; }
-    
-    /* Thiết lập lại vị trí nút đổi nền, đứng cố định ngay bên cạnh thanh trượt */
     .theme-btn { position: relative; right: auto; top: auto; margin-left: 4px; background: var(--teal-light); border-radius: 50%; width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-    
     .main { padding: 12px 10px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
     .card { padding: 14px 12px; border-radius: 14px; margin-bottom: 12px; }
     .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px; }
@@ -214,6 +263,8 @@
     .modal-overlay { align-items: flex-end; padding: 0; }
     .modal { border-radius: 20px 20px 0 0; max-height: 92vh; }
     .mobile-footer { display: block; }
+    .exam-cd-numbers { gap: 8px; }
+    .exam-cd-num { font-size: 1.4rem; padding: 10px 4px; }
   }
 </style>
 </head>
@@ -227,7 +278,6 @@
       <div style="font-size:1.6rem;font-weight:900;color:var(--teal-dark);">Quản lý lớp học gia sư</div>
       <div style="font-size:.85rem;color:var(--text-light);margin-top:4px;font-weight:700;">powered by namtruemilk</div>
     </div>
-    
     <button onclick="loginGoogle()" style="display:flex;align-items:center;gap:10px;padding:12px 28px;background:white;color:#3c4043;border:2px solid #dadce0;border-radius:30px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="22" height="22">
       Đăng nhập với Google
@@ -269,11 +319,34 @@
 
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
+    <!-- [MỚI] EXAM COUNTDOWN WIDGET -->
+    <div class="exam-countdown-widget" id="exam-countdown-widget">
+      <div class="exam-cd-header">
+        <div>
+          <div class="exam-cd-title">⏳ Đếm ngược kỳ thi</div>
+          <div class="exam-cd-subtitle" id="exam-cd-name">Thi vào lớp 10</div>
+        </div>
+        <button class="exam-cd-setting-btn" onclick="openModal('modal-exam-settings')">⚙️ Cài đặt ngày thi</button>
+      </div>
+      <div id="exam-countdown-content">
+        <div class="exam-cd-no-date">Chưa cài đặt ngày thi. Nhấn "Cài đặt ngày thi" để bắt đầu!</div>
+      </div>
+    </div>
+
     <div style="margin-bottom:16px;">
       <label style="font-weight:700;font-size:.9rem;">📅 Chọn tháng:</label>
       <select id="home-month" onchange="renderHome()" style="margin-left:10px; padding:6px 30px 6px 10px; border-radius: 10px; border: 2px solid var(--border); font-family: inherit; font-size: 0.9rem; outline: none; width: auto; min-width: 140px; max-width: 100%;"></select>
     </div>
     <div class="stats-grid" id="stats-grid"></div>
+
+    <!-- [MỚI] HOMEWORK WARNING SECTION -->
+    <div id="hw-warning-section" style="display:none;" class="card" style="border: 2px solid #fc8181; background: #fff5f5;">
+      <div class="card-header">
+        <span class="card-title" style="color:#c53030;">📝 Cảnh báo: Học sinh nợ bài tập</span>
+      </div>
+      <div id="hw-warning-list"></div>
+    </div>
+
     <div class="card">
       <div class="card-header">
         <span class="card-title">📋 Học sinh gần đây</span>
@@ -305,7 +378,7 @@
     </div>
   </div>
 
-  <!-- GROUPS PAGE (ĐÃ TÍCH HỢP CHECKBOX) -->
+  <!-- GROUPS PAGE -->
   <div id="page-groups" class="page">
     <div class="card">
       <div class="card-header">
@@ -336,6 +409,17 @@
               <div class="calendar" id="calendar"></div>
               <div style="margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:center;">
                 <span id="att-count-label" style="font-weight:800;color:var(--teal-dark);font-size:.9rem;"></span>
+              </div>
+              <!-- [MỚI] HOMEWORK TRACKER SECTION -->
+              <div class="hw-tracker-section" id="hw-tracker-section">
+                <div class="hw-tracker-title">📝 Bài tập về nhà tháng này</div>
+                <div id="hw-summary-display" style="font-size:0.82rem; color:var(--text-light); margin-bottom:10px;"></div>
+                <div class="hw-btn-group">
+                  <button class="hw-btn" id="hw-btn-done" onclick="setHomework('done')">✅ Đủ bài</button>
+                  <button class="hw-btn" id="hw-btn-missing" onclick="setHomework('missing')">⚠️ Thiếu bài</button>
+                  <button class="hw-btn" id="hw-btn-none" onclick="setHomework('none')">❌ Chưa làm</button>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-light); margin-top:8px;">Đánh giá tình trạng bài tập về nhà của tháng đang xem</div>
               </div>
           </div>
           <div class="calendar-sidebar">
@@ -368,6 +452,15 @@
           <input type="date" id="grade-date" class="full">
           <input type="text" id="grade-name" placeholder="Tên bài (VD: 15 phút, Giữa kỳ)..." class="full">
           <input type="number" id="grade-score" placeholder="Điểm số (0-10)..." class="full" step="0.25">
+          <!-- [MỚI] TARGET SCORE INPUT -->
+          <div class="form-group full" style="background: var(--yellow-light); border: 2px solid #fbbf24; border-radius: 12px; padding: 12px;">
+            <label style="color: #b45309;">🎯 Mục tiêu điểm số (vạch an toàn trên biểu đồ)</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input type="number" id="grade-target" placeholder="VD: 8.5" step="0.25" min="0" max="10" style="flex:1; border-color: #fbbf24;">
+              <button class="btn btn-sm" style="background:#fbbf24; color:#78350f; border:none; white-space:nowrap;" onclick="saveGradeTarget()">💾 Lưu mục tiêu</button>
+            </div>
+            <div id="grade-target-status" style="font-size:0.75rem; margin-top:4px; color:#b45309;"></div>
+          </div>
           <button class="btn btn-primary full" onclick="saveGrade()">💾 Lưu điểm số</button>
         </div>
       </div>
@@ -430,9 +523,11 @@
           </div>
         </div>
       </div>
-      <div style="display:flex; gap: 10px; margin-top: 16px;">
+      <div style="display:flex; gap: 10px; margin-top: 16px; flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="generatePhieu()">✨ Tạo phiếu</button>
         <button class="btn btn-outline" onclick="autoFillAttendance()">📅 Lấy từ điểm danh</button>
+        <!-- [MỚI] NÚT TẠO TIN NHẮN ZALO -->
+        <button class="btn" style="background:#06b6d4;color:white;" onclick="openZaloMessage()">💬 Tạo tin nhắn phụ huynh</button>
       </div>
     </div>
 
@@ -471,8 +566,6 @@
           <option value="month">Chế độ: Theo Tháng</option>
         </select>
       </div>
-      
-      <!-- Giao diện xem theo NĂM -->
       <div id="stats-view-year">
         <div style="text-align: right; margin-bottom: 16px;">
           <select id="stats-year" onchange="renderStats()" style="width: auto; min-width: 130px; max-width: 100%; padding: 5px 32px 5px 12px; border-radius: 12px; border: 2px solid var(--border); font-family: inherit; font-weight: 700; color: var(--teal-dark); background: var(--teal-light); cursor: pointer;"></select>
@@ -487,8 +580,6 @@
           <div id="avg-revenue-display" style="font-size: 1.4rem; font-weight: 900; color: var(--teal);">0đ</div>
         </div>
       </div>
-
-      <!-- Giao diện xem theo THÁNG -->
       <div id="stats-view-month" style="display: none;">
         <div style="text-align: right; margin-bottom: 16px; display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
           <label style="font-size:.85rem;font-weight:700;color:var(--text-light);">Chọn tháng:</label>
@@ -501,12 +592,10 @@
     </div>
   </div>
 
-  <!-- CHỮ KÝ MOBILE -->
   <div class="mobile-footer">powered by namtruemilk</div>
-
 </div>
 
-<!-- MODALS -->
+<!-- === MODALS GỐC === -->
 <div class="modal-overlay" id="modal-student">
   <div class="modal">
     <div class="modal-header">
@@ -568,8 +657,59 @@
   </div>
 </div>
 
+<!-- === MODALS MỚI === -->
+
+<!-- [MỚI] MODAL CÀI ĐẶT NGÀY THI -->
+<div class="modal-overlay" id="modal-exam-settings">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">⚙️ Cài đặt ngày thi</span>
+      <button class="modal-close" onclick="closeModal('modal-exam-settings')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Tên kỳ thi</label>
+        <input type="text" id="exam-name-input" placeholder="VD: Thi vào lớp 10 THPT" value="Thi vào lớp 10">
+      </div>
+      <div class="form-group full">
+        <label>📅 Ngày thi dự kiến</label>
+        <input type="date" id="exam-date-input">
+      </div>
+      <div class="form-group full">
+        <label>📅 Ngày bắt đầu ôn thi (để tính %)</label>
+        <input type="date" id="exam-start-input">
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:20px; display:flex; gap:10px;">
+      <button class="btn btn-danger btn-sm" onclick="clearExamSettings()" style="flex:0 0 auto;">Xóa</button>
+      <button class="btn btn-outline" style="flex:1; justify-content:center;" onclick="closeModal('modal-exam-settings')">Hủy</button>
+      <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="saveExamSettings()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- [MỚI] MODAL TIN NHẮN ZALO -->
+<div class="modal-overlay" id="modal-zalo-message">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header">
+      <span class="modal-title">💬 Tin nhắn báo cáo phụ huynh</span>
+      <button class="modal-close" onclick="closeModal('modal-zalo-message')">✕</button>
+    </div>
+    <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:12px;">Hệ thống tự động tạo tin nhắn dựa trên dữ liệu học sinh. Bạn có thể chỉnh sửa trước khi gửi.</p>
+    <textarea id="zalo-message-text" style="width:100%; min-height:200px; font-size:0.9rem; line-height:1.7; border:2px solid var(--border); border-radius:14px; padding:14px; background:var(--bg); color:var(--text); resize:vertical;"></textarea>
+    <div class="zalo-actions">
+      <button class="btn btn-outline btn-sm" onclick="regenerateZaloMessage()">🔄 Tạo lại</button>
+      <button class="btn btn-primary" onclick="copyZaloMessage()">📋 Sao chép</button>
+      <a id="zalo-open-link" href="#" target="_blank" style="display:none;">
+        <button class="btn-zalo">💬 Mở Zalo</button>
+      </a>
+    </div>
+    <div id="zalo-copy-confirm" style="display:none; text-align:center; color:var(--teal); font-weight:700; font-size:0.85rem; margin-top:10px;">✅ Đã sao chép vào clipboard!</div>
+  </div>
+</div>
+
 <script>
-// BIẾN TOÀN CỤC & TẠO LỊCH CỐ ĐỊNH KHI TRANG LOAD
+// ===== BIẾN TOÀN CỤC =====
 let revenueChartInstance = null;
 let gradeChartInstance = null;
 const now = new Date();
@@ -581,14 +721,13 @@ let saveTimeout = null;
 let editingStudentId = null;
 let selectedStudentId = null;
 
-// QUẢN LÝ CHẾ ĐỘ TỐI (DARK MODE)
+// ===== DARK MODE =====
 function toggleTheme() {
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
   localStorage.setItem('giasu_theme', isDark ? 'dark' : 'light');
   document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
 }
-// Khôi phục giao diện tối nếu đã lưu
 if(localStorage.getItem('giasu_theme') === 'dark') {
   document.body.classList.add('dark');
   document.addEventListener("DOMContentLoaded", () => { document.getElementById('theme-icon').textContent = '☀️'; });
@@ -598,7 +737,6 @@ function populateMonthSelects() {
   const years = new Set();
   for (let y = currentYear - 3; y <= currentYear + 3; y++) years.add(y);
   if (db.phieus) db.phieus.forEach(p => { if(p.month) years.add(parseInt(p.month.split('-')[0])); });
-  
   const sortedYears = Array.from(years).sort((a,b) => b - a);
   let options = '';
   sortedYears.forEach(y => {
@@ -607,9 +745,7 @@ function populateMonthSelects() {
       options += `<option value="${val}">Tháng ${m}/${y}</option>`;
     }
   });
-
   const defaultVal = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
-  
   ['home-month', 'phieu-month', 'history-month', 'stats-month-picker'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -622,7 +758,7 @@ function populateMonthSelects() {
 }
 populateMonthSelects();
 
-// ===== FIREBASE INIT =====
+// ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyD_Bf1lv5o4iS0MQO3kByCXWaNOfBESmpc",
   authDomain: "namtruemilk-372004.firebaseapp.com",
@@ -635,7 +771,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-// DUY TRÌ ĐĂNG NHẬP TRONG MÁY
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
 function loginGoogle() {
@@ -693,17 +828,9 @@ function hideApp() {
   db = { students: [], attendance: {}, phieus: [], grades: {} };
 }
 
-// BẮT TRẠNG THÁI ĐĂNG NHẬP 
 auth.onAuthStateChanged(async user => {
-  if (user) { 
-    currentUser = user; 
-    await loadDb(); 
-    showApp(); 
-  } 
-  else { 
-    currentUser = null; 
-    hideApp(); 
-  }
+  if (user) { currentUser = user; await loadDb(); showApp(); }
+  else { currentUser = null; hideApp(); }
 });
 
 function showPage(id) {
@@ -712,7 +839,6 @@ function showPage(id) {
   document.getElementById(id).classList.add('active');
   const idx = ['page-home','page-students','page-groups','page-attendance','page-grades','page-phieu','page-stats'].indexOf(id);
   if(idx >= 0) document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
-  
   if (id === 'page-home') renderHome();
   if (id === 'page-students') renderStudents();
   if (id === 'page-groups') renderGroups();
@@ -722,7 +848,7 @@ function showPage(id) {
   if (id === 'page-stats') renderStats();
 }
 
-// ===== TÍNH NĂNG MỚI: QUẢN LÝ NHÓM LỚP (ĐÃ CÓ CHECKBOX) =====
+// ===== GROUPS PAGE =====
 function renderGroups() {
   const groups = {};
   db.students.forEach(s => {
@@ -730,8 +856,7 @@ function renderGroups() {
     if(!groups[g]) groups[g] = [];
     groups[g].push(s);
   });
-  let html = '';
-  let gIndex = 0;
+  let html = ''; let gIndex = 0;
   for(let g in groups) {
     html += `
       <div class="card" id="group-card-${gIndex}" style="border: 2px solid var(--border); box-shadow: none; margin-bottom: 12px; padding: 18px;">
@@ -758,25 +883,19 @@ function bulkAttend(gIndex, gradeName) {
   const card = document.getElementById(`group-card-${gIndex}`);
   const checkboxes = card.querySelectorAll('.group-student-check:checked');
   const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-  
-  if (selectedIds.length === 0) {
-    return alert('Vui lòng để lại dấu tích cho ít nhất 1 học sinh!');
-  }
+  if (selectedIds.length === 0) return alert('Vui lòng để lại dấu tích cho ít nhất 1 học sinh!');
   if(!confirm(`Xác nhận điểm danh "Học nhóm" cho ${selectedIds.length} học sinh đang được tích trong nhóm ${gradeName} vào hôm nay?`)) return;
-  
   const today = new Date().getDate();
   const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
-  
   selectedIds.forEach(sid => {
     if (!db.attendance[sid]) db.attendance[sid] = {};
     if (!db.attendance[sid][key]) db.attendance[sid][key] = {};
-    db.attendance[sid][key][today] = 'group'; // Đánh dấu là học nhóm
+    db.attendance[sid][key][today] = 'group';
   });
-  save(); 
-  alert('✅ Đã điểm danh thành công!');
+  save(); alert('✅ Đã điểm danh thành công!');
 }
 
-// ===== TÍNH NĂNG MỚI: SỔ ĐIỂM & TIẾN ĐỘ =====
+// ===== GRADES PAGE =====
 function renderGradeStudentSelect() {
   document.getElementById('grade-student').innerHTML = '<option value="">-- Chọn học sinh --</option>' + db.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
   document.getElementById('grade-content').style.display = 'none';
@@ -790,9 +909,19 @@ function renderGrades() {
 
   db.grades = db.grades || {};
   const grades = db.grades[sid] || [];
-  grades.sort((a,b) => new Date(a.date) - new Date(b.date)); // Sắp xếp theo ngày
+  grades.sort((a,b) => new Date(a.date) - new Date(b.date));
 
-  // Hiển thị lịch sử điểm
+  // [MỚI] Hiển thị mục tiêu điểm hiện tại
+  const targets = db.gradeTargets || {};
+  const target = targets[sid];
+  if (target) {
+    document.getElementById('grade-target').value = target;
+    document.getElementById('grade-target-status').textContent = `✅ Mục tiêu hiện tại: ${target} điểm`;
+  } else {
+    document.getElementById('grade-target').value = '';
+    document.getElementById('grade-target-status').textContent = 'Chưa đặt mục tiêu';
+  }
+
   document.getElementById('grade-history').innerHTML = grades.length ? grades.map(g => `
     <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px dashed var(--border);">
       <div>
@@ -806,25 +935,65 @@ function renderGrades() {
     </div>
   `).reverse().join('') : '<div class="empty-state">Chưa có điểm số nào. Hãy thêm điểm ở trên.</div>';
 
-  // Vẽ biểu đồ Chart.js
+  // Vẽ biểu đồ với target line
   if(gradeChartInstance) gradeChartInstance.destroy();
+
+  const chartData = {
+    labels: grades.map(g => g.name),
+    datasets: [{ 
+      label: 'Điểm số', 
+      data: grades.map(g => g.score), 
+      borderColor: '#f72585', 
+      backgroundColor: 'rgba(247, 37, 133, 0.15)', 
+      fill: true, 
+      tension: 0.3,
+      pointBackgroundColor: '#f72585',
+      pointRadius: 4
+    }]
+  };
+
+  // [MỚI] Thêm target line nếu có
+  if (target && grades.length > 0) {
+    chartData.datasets.push({
+      label: `🎯 Mục tiêu: ${target}`,
+      data: grades.map(() => parseFloat(target)),
+      borderColor: '#f59e0b',
+      borderWidth: 2,
+      borderDash: [8, 4],
+      pointRadius: 0,
+      fill: false,
+      tension: 0,
+      backgroundColor: 'transparent'
+    });
+  }
+
   gradeChartInstance = new Chart(document.getElementById('gradeChart').getContext('2d'), {
     type: 'line',
-    data: {
-      labels: grades.map(g => g.name),
-      datasets: [{ 
-        label: 'Điểm số', 
-        data: grades.map(g => g.score), 
-        borderColor: '#f72585', 
-        backgroundColor: 'rgba(247, 37, 133, 0.15)', 
-        fill: true, 
-        tension: 0.3,
-        pointBackgroundColor: '#f72585',
-        pointRadius: 4
-      }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 10 } } }
+    data: chartData,
+    options: { 
+      responsive: true, maintainAspectRatio: false, 
+      plugins: { 
+        legend: { 
+          display: target ? true : false,
+          labels: { font: { family: 'Nunito', weight: '700' }, boxWidth: 20 }
+        } 
+      }, 
+      scales: { y: { min: 0, max: 10 } } 
+    }
   });
+}
+
+// [MỚI] Lưu mục tiêu điểm số
+function saveGradeTarget() {
+  const sid = document.getElementById('grade-student').value;
+  if(!sid) return alert('Vui lòng chọn học sinh trước!');
+  const target = parseFloat(document.getElementById('grade-target').value);
+  if(isNaN(target) || target < 0 || target > 10) return alert('Vui lòng nhập mục tiêu điểm hợp lệ (0-10)!');
+  db.gradeTargets = db.gradeTargets || {};
+  db.gradeTargets[sid] = target;
+  save();
+  document.getElementById('grade-target-status').textContent = `✅ Đã lưu mục tiêu: ${target} điểm`;
+  renderGrades();
 }
 
 function saveGrade() {
@@ -833,7 +1002,6 @@ function saveGrade() {
   const name = document.getElementById('grade-name').value.trim();
   const score = parseFloat(document.getElementById('grade-score').value);
   if(!sid || !date || !name || isNaN(score)) return alert('Vui lòng nhập đầy đủ thông tin và điểm số hợp lệ!');
-
   db.grades = db.grades || {};
   db.grades[sid] = db.grades[sid] || [];
   db.grades[sid].push({ id: Date.now().toString(), date, name, score });
@@ -893,6 +1061,283 @@ function renderHome() {
       <span class="tag" style="font-weight:700; color:var(--teal);">${fmt(s.type==='group' ? (s.priceGroup||s.price||0) : (s.pricePrivate||s.price||0))}đ/buổi</span>
     </div>
   `).join('') : '<div class="empty-state"><p>Chưa có học sinh nào</p></div>';
+
+  // [MỚI] Render exam countdown
+  renderExamCountdown();
+
+  // [MỚI] Render homework warnings
+  renderHomeworkWarnings();
+}
+
+// ===== [MỚI] TÍNH NĂNG 1: EXAM COUNTDOWN =====
+function renderExamCountdown() {
+  const examSettings = db.examSettings || {};
+  const contentEl = document.getElementById('exam-countdown-content');
+  const nameEl = document.getElementById('exam-cd-name');
+
+  if (!examSettings.date) {
+    contentEl.innerHTML = `<div class="exam-cd-no-date">Chưa cài đặt ngày thi. Nhấn "⚙️ Cài đặt ngày thi" để bắt đầu!</div>`;
+    return;
+  }
+
+  nameEl.textContent = examSettings.name || 'Thi vào lớp 10';
+
+  const examDate = new Date(examSettings.date);
+  examDate.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffMs = examDate - today;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) {
+    contentEl.innerHTML = `<div class="exam-cd-no-date" style="color:#f472b6;">🎉 Kỳ thi đã diễn ra ${Math.abs(diffDays)} ngày trước. Chúc các em đạt kết quả tốt!</div>`;
+    return;
+  }
+  if (diffDays === 0) {
+    contentEl.innerHTML = `<div class="exam-cd-no-date" style="color:#fbbf24; font-size:1.2rem;">🔥 HÔM NAY LÀ NGÀY THI! Chúc các em thật bình tĩnh và đạt kết quả cao!</div>`;
+    return;
+  }
+
+  const weeks = Math.floor(diffDays / 7);
+  const days = diffDays % 7;
+  const hours = new Date().getHours();
+  const mins = new Date().getMinutes();
+
+  let progressPercent = 0;
+  let progressText = '';
+  if (examSettings.startDate) {
+    const startDate = new Date(examSettings.startDate);
+    startDate.setHours(0, 0, 0, 0);
+    const totalDays = Math.ceil((examDate - startDate) / (1000 * 60 * 60 * 24));
+    const passedDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24));
+    if (totalDays > 0 && passedDays >= 0) {
+      progressPercent = Math.min(100, Math.round((passedDays / totalDays) * 100));
+      progressText = `Đã ôn thi ${progressPercent}% lộ trình`;
+    }
+  }
+
+  let urgencyColor = diffDays > 60 ? '#3bbfad' : diffDays > 30 ? '#fbbf24' : '#f87171';
+
+  contentEl.innerHTML = `
+    <div class="exam-cd-numbers">
+      <div class="exam-cd-unit">
+        <div class="exam-cd-num ${diffDays < 30 ? 'highlight' : ''}">${diffDays}</div>
+        <div class="exam-cd-label">NGÀY</div>
+      </div>
+      <div class="exam-cd-unit">
+        <div class="exam-cd-num">${weeks}</div>
+        <div class="exam-cd-label">TUẦN</div>
+      </div>
+      <div class="exam-cd-unit">
+        <div class="exam-cd-num">${days}</div>
+        <div class="exam-cd-label">NGÀY LẺ</div>
+      </div>
+      <div class="exam-cd-unit">
+        <div class="exam-cd-num">${String(24-hours).padStart(2,'0')}</div>
+        <div class="exam-cd-label">GIỜ CÒN LẠI</div>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:0.78rem; color:rgba(255,255,255,0.6); margin-bottom:8px;">
+      📅 Ngày thi: <b style="color:rgba(255,255,255,0.9);">${examDate.toLocaleDateString('vi-VN', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</b>
+    </div>
+    ${progressPercent > 0 ? `
+    <div class="exam-cd-progress-bar">
+      <div class="exam-cd-progress-fill" style="width:${progressPercent}%;"></div>
+    </div>
+    <div class="exam-cd-progress-text">${progressText}</div>
+    ` : ''}
+  `;
+}
+
+function saveExamSettings() {
+  const name = document.getElementById('exam-name-input').value.trim() || 'Thi vào lớp 10';
+  const date = document.getElementById('exam-date-input').value;
+  const startDate = document.getElementById('exam-start-input').value;
+  if(!date) return alert('Vui lòng chọn ngày thi!');
+  db.examSettings = { name, date, startDate };
+  save();
+  closeModal('modal-exam-settings');
+  renderExamCountdown();
+}
+
+function clearExamSettings() {
+  if(!confirm('Xóa cài đặt ngày thi?')) return;
+  delete db.examSettings;
+  save();
+  closeModal('modal-exam-settings');
+  renderExamCountdown();
+}
+
+// Mở modal và điền dữ liệu hiện tại
+document.getElementById('modal-exam-settings').addEventListener('click', function(e) {
+  // pre-fill khi mở
+});
+
+function openExamModal() {
+  const s = db.examSettings || {};
+  document.getElementById('exam-name-input').value = s.name || 'Thi vào lớp 10';
+  document.getElementById('exam-date-input').value = s.date || '';
+  document.getElementById('exam-start-input').value = s.startDate || '';
+  openModal('modal-exam-settings');
+}
+
+// Override nút cài đặt để pre-fill
+document.querySelector('.exam-cd-setting-btn').onclick = function() { openExamModal(); };
+
+// ===== [MỚI] TÍNH NĂNG 3: HOMEWORK TRACKER =====
+function setHomework(status) {
+  if(!selectedStudentId) return;
+  const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+  db.homework = db.homework || {};
+  db.homework[selectedStudentId] = db.homework[selectedStudentId] || {};
+  if (db.homework[selectedStudentId][key] === status) {
+    // toggle off
+    delete db.homework[selectedStudentId][key];
+  } else {
+    db.homework[selectedStudentId][key] = status;
+  }
+  save();
+  renderHomeworkStatus();
+}
+
+function renderHomeworkStatus() {
+  if(!selectedStudentId) return;
+  const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+  const status = db.homework?.[selectedStudentId]?.[key] || '';
+  
+  ['done','missing','none'].forEach(s => {
+    const btn = document.getElementById(`hw-btn-${s}`);
+    if(btn) {
+      btn.className = 'hw-btn';
+      if(status === s) btn.classList.add(`active-${s}`);
+    }
+  });
+
+  const summaryEl = document.getElementById('hw-summary-display');
+  if(summaryEl) {
+    const labels = { done: '✅ Đã ghi: Đủ bài', missing: '⚠️ Đã ghi: Thiếu bài', none: '❌ Đã ghi: Chưa làm bài' };
+    summaryEl.textContent = labels[status] || 'Chưa ghi nhận tình trạng bài tập tháng này.';
+    summaryEl.style.color = status === 'done' ? '#38a169' : status === 'missing' ? '#d69e2e' : status === 'none' ? '#c53030' : 'var(--text-light)';
+  }
+}
+
+function renderHomeworkWarnings() {
+  const warningSection = document.getElementById('hw-warning-section');
+  const warningList = document.getElementById('hw-warning-list');
+  const selectedMonth = document.getElementById('home-month').value;
+  
+  if(!db.homework || !warningSection) return;
+  
+  const warnings = [];
+  db.students.forEach(s => {
+    const status = db.homework?.[s.id]?.[selectedMonth];
+    if(status === 'missing' || status === 'none') {
+      warnings.push({ name: s.name, status });
+    }
+  });
+  
+  if(warnings.length === 0) {
+    warningSection.style.display = 'none';
+    return;
+  }
+  
+  warningSection.style.display = 'block';
+  warningList.innerHTML = warnings.map(w => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px dashed #fed7d7;">
+      <span style="font-weight:700; font-size:0.9rem;">👤 ${w.name}</span>
+      <span style="font-size:0.78rem; font-weight:800; padding:3px 10px; border-radius:20px; background:${w.status==='none'?'#fff5f5':'#fffbea'}; color:${w.status==='none'?'#c53030':'#b7791f'}; border:1.5px solid ${w.status==='none'?'#fc8181':'#fbbf24'};">
+        ${w.status === 'none' ? '❌ Chưa làm bài' : '⚠️ Thiếu bài'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// ===== [MỚI] TÍNH NĂNG 4: ZALO AUTO-MESSAGE =====
+let zaloCurrentStudentId = null;
+
+function openZaloMessage() {
+  const studentId = document.getElementById('phieu-student').value;
+  if(!studentId) return alert('Vui lòng chọn học sinh trước!');
+  zaloCurrentStudentId = studentId;
+  generateZaloMessageContent();
+  openModal('modal-zalo-message');
+}
+
+function generateZaloMessageContent() {
+  const sid = zaloCurrentStudentId;
+  if(!sid) return;
+  const s = db.students.find(x => x.id === sid);
+  if(!s) return;
+
+  const month = document.getElementById('phieu-month').value;
+  const monthNum = parseInt(month.split('-')[1]);
+  const yearNum = month.split('-')[0];
+
+  // Lấy số buổi
+  const p = parseInt(document.getElementById('phieu-private-sessions').value) || 0;
+  const g = parseInt(document.getElementById('phieu-group-sessions').value) || 0;
+  const sessions = p + g;
+  const total = p * (s.pricePrivate || s.price || 0) + g * (s.priceGroup || s.price || 0);
+
+  // Lấy điểm trung bình
+  const grades = db.grades?.[sid] || [];
+  let avgText = '';
+  if(grades.length > 0) {
+    const avg = (grades.reduce((sum, g) => sum + g.score, 0) / grades.length).toFixed(1);
+    const target = db.gradeTargets?.[sid];
+    const targetNote = target ? (parseFloat(avg) >= target ? ` (đã đạt mục tiêu 🎯)` : ` (mục tiêu ${target} - đang nỗ lực 💪)`) : '';
+    avgText = `Điểm trung bình các bài kiểm tra là *${avg}*${targetNote}. `;
+  }
+
+  // Tình trạng bài tập
+  const hwStatus = db.homework?.[sid]?.[month];
+  let hwText = '';
+  if(hwStatus === 'done') hwText = 'Bé học bài và làm bài tập đầy đủ. ';
+  else if(hwStatus === 'missing') hwText = 'Tuy nhiên bé còn thiếu một số bài tập về nhà, mong anh/chị nhắc nhở thêm ạ. ';
+  else if(hwStatus === 'none') hwText = 'Lưu ý: Bé chưa hoàn thành bài tập về nhà trong tháng này, rất mong anh/chị phối hợp nhắc nhở ạ. ';
+
+  const comment = document.getElementById('phieu-comment').value.trim();
+  const commentText = comment ? `\n\n💬 Nhận xét của em về bé: "${comment}"` : '';
+
+  const message = `Dạ em chào anh/chị ạ! 🌟
+
+Em gửi báo ccáo học tập tháng ${monthNum}/${yearNum} của bé *${s.name}* ạ.
+
+📚 *Tháng này bé đi học ${sessions} buổi* (${p > 0 ? `${p} buổi riêng` : ''}${p > 0 && g > 0 ? ', ' : ''}${g > 0 ? `${g} buổi nhóm` : ''}).
+
+📊 ${avgText}${hwText}
+💰 *Học phí tháng ${monthNum}: ${fmt(total)}đ*
+${commentText}
+
+Anh/chị xem lại chi tiết và thanh toán học phí giúp em nhé ạ! 🙏
+
+Em cảm ơn anh/chị ạ! 😊`;
+
+  document.getElementById('zalo-message-text').value = message;
+  document.getElementById('zalo-copy-confirm').style.display = 'none';
+}
+
+function regenerateZaloMessage() {
+  generateZaloMessageContent();
+}
+
+function copyZaloMessage() {
+  const text = document.getElementById('zalo-message-text').value;
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      const confirm = document.getElementById('zalo-copy-confirm');
+      confirm.style.display = 'block';
+      setTimeout(() => confirm.style.display = 'none', 3000);
+    });
+  } else {
+    // Fallback
+    const el = document.getElementById('zalo-message-text');
+    el.select();
+    document.execCommand('copy');
+    const confirm = document.getElementById('zalo-copy-confirm');
+    confirm.style.display = 'block';
+    setTimeout(() => confirm.style.display = 'none', 3000);
+  }
 }
 
 // ===== TRANG HỌC SINH =====
@@ -951,7 +1396,7 @@ function saveStudent() {
   const priceGroup = parseInt(document.getElementById('s-price-group').value) || 0;
   const price = type === 'group' ? priceGroup : pricePrivate;
   const data = { name, grade: document.getElementById('s-grade').value.trim(), subject: document.getElementById('s-subject').value.trim(), type, pricePrivate, priceGroup, price, phone: document.getElementById('s-phone').value.trim(), note: document.getElementById('s-note').value.trim() };
-  if (editingStudentId) { const idx = db.students.findIndex(s => s.id === editingStudentId); db.students[idx] = { ...db.students[idx], ...data }; } 
+  if (editingStudentId) { const idx = db.students.findIndex(s => s.id === editingStudentId); db.students[idx] = { ...db.students[idx], ...data }; }
   else { db.students.push({ id: Date.now().toString(), ...data }); }
   save(); closeModal('modal-student'); renderStudents(); renderPhieuStudentSelect();
 }
@@ -974,9 +1419,10 @@ function selectAttStudent(id) {
   selectedStudentId = id; document.getElementById('att-calendar-card').style.display = 'block';
   const s = db.students.find(x => x.id === id); document.getElementById('att-student-name').textContent = '📅 ' + s.name;
   renderCalendar(); renderAttStudents();
+  renderHomeworkStatus(); // [MỚI]
 }
 
-function changeMonth(d) { currentMonth += d; if (currentMonth > 11) { currentMonth = 0; currentYear++; } if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); }
+function changeMonth(d) { currentMonth += d; if (currentMonth > 11) { currentMonth = 0; currentYear++; } if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); renderHomeworkStatus(); }
 
 function renderCalendar() {
   if (!selectedStudentId) return;
@@ -998,7 +1444,6 @@ function renderCalendar() {
     const val = attendedObj[d] || ''; let p = 0, g = 0;
     if (val === 'private') p = 1; else if (val === 'group') g = 1;
     else if (val && typeof val === 'string' && val.startsWith('p:')) { const parts = val.split(','); p = parseInt(parts[0].split(':')[1])||0; g = parseInt(parts[1].split(':')[1])||0; }
-    
     let cls = isToday ? 'today ' : ''; let badge = '';
     if (p > 0 || g > 0) {
         totalSessions += (p + g);
@@ -1035,7 +1480,6 @@ function saveMultiSession() {
   const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
   if (!db.attendance[selectedStudentId]) db.attendance[selectedStudentId] = {};
   if (!db.attendance[selectedStudentId][key]) db.attendance[selectedStudentId][key] = {};
-  
   if (p === 0 && g === 0) delete db.attendance[selectedStudentId][key][d];
   else if (p === 1 && g === 0) db.attendance[selectedStudentId][key][d] = 'private';
   else if (p === 0 && g === 1) db.attendance[selectedStudentId][key][d] = 'group';
@@ -1043,71 +1487,54 @@ function saveMultiSession() {
   save(); closeModal('modal-multi-session'); renderCalendar();
 }
 
-// ===== TRANG PHIẾU HỌC PHÍ (ĐÃ NÂNG CẤP TỰ ĐỘNG CẮT MÃ QR) =====
+// ===== TRANG PHIẾU HỌC PHÍ =====
 function handleQRUpload(event) {
-  const file = event.target.files[0]; 
-  if (!file) return; 
-  
-  const reader = new FileReader(); 
-  reader.onload = e => { 
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
     const originalDataUrl = e.target.result;
-    
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d', { willReadFrequently: true });
-      canvas.width = img.width;
-      canvas.height = img.height;
+      canvas.width = img.width; canvas.height = img.height;
       ctx.drawImage(img, 0, 0, img.width, img.height);
-      
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, imageData.width, imageData.height);
-      
       if (code) {
         const loc = code.location;
         const minX = Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x);
         const minY = Math.min(loc.topLeftCorner.y, loc.topRightCorner.y);
         const maxX = Math.max(loc.topRightCorner.x, loc.bottomRightCorner.x);
         const maxY = Math.max(loc.bottomLeftCorner.y, loc.bottomRightCorner.y);
-        
-        const width = maxX - minX;
-        const height = maxY - minY;
-        
-        const padX = width * 0.1;
-        const padY = height * 0.1;
-        
-        const cropX = Math.max(0, minX - padX);
-        const cropY = Math.max(0, minY - padY);
+        const width = maxX - minX; const height = maxY - minY;
+        const padX = width * 0.1; const padY = height * 0.1;
+        const cropX = Math.max(0, minX - padX); const cropY = Math.max(0, minY - padY);
         const cropW = Math.min(canvas.width - cropX, width + padX * 2);
         const cropH = Math.min(canvas.height - cropY, height + padY * 2);
-        
         const cropCanvas = document.createElement('canvas');
-        cropCanvas.width = cropW;
-        cropCanvas.height = cropH;
+        cropCanvas.width = cropW; cropCanvas.height = cropH;
         const cropCtx = cropCanvas.getContext('2d');
-        
-        cropCtx.fillStyle = "#ffffff";
-        cropCtx.fillRect(0, 0, cropW, cropH);
-        
+        cropCtx.fillStyle = "#ffffff"; cropCtx.fillRect(0, 0, cropW, cropH);
         cropCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-        
         db.qrCode = cropCanvas.toDataURL('image/png');
       } else {
         db.qrCode = originalDataUrl;
       }
-      
-      save(); 
-      renderQRPreview();
+      save(); renderQRPreview();
     };
     img.src = originalDataUrl;
-  }; 
-  reader.readAsDataURL(file); 
+  };
+  reader.readAsDataURL(file);
 }
 
 function removeQR() { delete db.qrCode; save(); renderQRPreview(); }
 function renderQRPreview() { const img = document.getElementById('qr-preview-img'); const btn = document.getElementById('qr-remove-btn'); if (db.qrCode) { img.src = db.qrCode; img.style.display = 'block'; btn.style.display = 'inline-flex'; } else { img.src = ''; img.style.display = 'none'; btn.style.display = 'none'; } }
 
 function renderPhieuStudentSelect() { document.getElementById('phieu-student').innerHTML = '<option value="">-- Chọn học sinh --</option>' + db.students.map(s => `<option value="${s.id}">${s.name}</option>`).join(''); }
+
+function fillPhieuFromStudent() { calcTotal(); }
 
 function autoFillAttendance() {
   const id = document.getElementById('phieu-student').value; const month = document.getElementById('phieu-month').value;
@@ -1136,19 +1563,13 @@ function generatePhieu() {
   let typeLabels = []; if (p > 0) typeLabels.push(`👤 ${p} Riêng`); if (g > 0) typeLabels.push(`👥 ${g} Nhóm`);
   let dateChips = []; const attObj = db.attendance[studentId]?.[month];
   if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => `${String(d).padStart(2,'0')}/${month.split('-')[1]}`);
-  
   const html = buildPhieuHTML({
-    studentName: s.name,
-    monthLabel: `Tháng ${parseInt(month.split('-')[1])}`,
-    total,
-    sessions: p+g,
-    dateChips,
+    studentName: s.name, monthLabel: `Tháng ${parseInt(month.split('-')[1])}`, total, sessions: p+g, dateChips,
     comment: document.getElementById('phieu-comment').value.trim(),
     lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư',
     typeLabel: typeLabels.join(' + ') || 'Chưa có',
     qrCode: db.qrCode
   });
-  
   document.getElementById('phieu-display').innerHTML = html; document.getElementById('phieu-preview').style.display = 'block'; document.getElementById('phieu-preview').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1159,7 +1580,6 @@ function buildPhieuHTML(d) {
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
 
-// Đã bổ sung nút ✕ và ẩn đi khi in
 function printDoc(html) {
   const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:'Nunito',sans-serif;}.phieu{width:340px;border-radius:20px;overflow:hidden;font-family:'Quicksand',sans-serif;border:1px solid #e2e8f0;}.phieu-header{background:#3bbfad;padding:22px 20px 18px;text-align:center;color:white;}.phieu-header .lop{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}.phieu-header .title{font-size:2rem;font-weight:800;letter-spacing:1px;margin:2px 0;}.phieu-header .thang{font-size:.9rem;opacity:.9;}.phieu-body{padding:18px 20px;}.phieu-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px dashed #e2e8f0;font-size:.88rem;}.phieu-row-label{color:#718096;font-weight:600;}.phieu-row-value{font-weight:700;color:#2d3748;}.phieu-total{background:#e0f5f3;border:2px solid #3bbfad;border-radius:12px;padding:12px;text-align:center;margin:12px 0;}.phieu-total-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;}.phieu-total-value{font-size:1.7rem;font-weight:900;color:#3bbfad;}.phieu-dates{margin:10px 0;}.phieu-dates-label{font-size:.68rem;font-weight:800;letter-spacing:1.5px;color:#718096;text-align:center;margin-bottom:8px;text-transform:uppercase;}.phieu-dates-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}.phieu-date-chip{background:#e0f5f3;color:#2a9d8f;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1.5px solid #b2dfdb;}.phieu-comment{background:#fffbea;border:1.5px solid #ffd166;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#2d3748;text-align:center;margin-top:10px;line-height:1.5;}.phieu-footer{text-align:center;padding:10px;font-size:.78rem;color:#f72585;font-weight:700;} .close-btn { position: fixed; top: 16px; right: 16px; background: #e53e3e; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 0; } .close-btn:active { background: #c53030; transform: scale(0.95); } @media print{body{background:white;} .close-btn { display: none !important; }}</style></head><body><button class="close-btn" onclick="window.close(); window.history.back();">✕</button><div class="phieu">${html}</div></body></html>`);
@@ -1175,7 +1595,6 @@ function savePhieu() {
   let typeLabels = []; if (p > 0) typeLabels.push(`👤 ${p} Riêng`); if (g > 0) typeLabels.push(`👥 ${g} Nhóm`);
   let dateChips = []; const attObj = db.attendance[studentId]?.[month];
   if (attObj) dateChips = Object.keys(attObj).map(Number).sort((a,b)=>a-b).map(d => `${String(d).padStart(2,'0')}/${month.split('-')[1]}`);
-  
   db.phieus = db.phieus || [];
   db.phieus.unshift({ id: Date.now().toString(), studentId, studentName: s.name, month, price: total, sessions: p+g, total, typeLabel: typeLabels.join(' + ') || 'Chưa có', dateChips, comment: document.getElementById('phieu-comment').value.trim(), lop: document.getElementById('phieu-lop').value.trim() || 'Lớp Học Gia Sư', qrCode: db.qrCode || '', createdAt: new Date().toISOString() });
   save(); renderPhieuHistory(); populateMonthSelects(); alert('✅ Đã lưu phiếu!');
@@ -1205,15 +1624,8 @@ function togglePaid(id, paid) { const p = db.phieus.find(x => x.id === id); if (
 function viewPhieu(id) {
   const p = db.phieus.find(x => x.id === id); if (!p) return;
   document.getElementById('modal-view-phieu-content').innerHTML = buildPhieuHTML({
-    studentName: p.studentName,
-    monthLabel: `Tháng ${parseInt(p.month.split('-')[1])}`,
-    total: p.total,
-    sessions: p.sessions,
-    dateChips: p.dateChips || [],
-    comment: p.comment || '',
-    lop: p.lop || 'Lớp Học Gia Sư',
-    typeLabel: p.typeLabel || '',
-    qrCode: p.qrCode || ''
+    studentName: p.studentName, monthLabel: `Tháng ${parseInt(p.month.split('-')[1])}`, total: p.total, sessions: p.sessions,
+    dateChips: p.dateChips || [], comment: p.comment || '', lop: p.lop || 'Lớp Học Gia Sư', typeLabel: p.typeLabel || '', qrCode: p.qrCode || ''
   });
   openModal('modal-view-phieu');
 }
@@ -1223,7 +1635,7 @@ function deletePhieu(id) { db.phieus = db.phieus.filter(p => p.id !== id); save(
 // ===== TRANG THỐNG KÊ =====
 function renderStats() {
   const mode = document.getElementById('stats-mode').value;
-  if (mode === 'year') { document.getElementById('stats-view-year').style.display = 'block'; document.getElementById('stats-view-month').style.display = 'none'; renderStatsYearly(); } 
+  if (mode === 'year') { document.getElementById('stats-view-year').style.display = 'block'; document.getElementById('stats-view-month').style.display = 'none'; renderStatsYearly(); }
   else { document.getElementById('stats-view-year').style.display = 'none'; document.getElementById('stats-view-month').style.display = 'block'; renderStatsMonthly(); }
 }
 
@@ -1237,22 +1649,18 @@ function renderStatsYearly() {
   }
   const selectedYear = yearSelect.value; let totalCreated = 0; let totalReceived = 0;
   let monthlyData = Array(12).fill(0).map(() => ({ created: 0, received: 0 }));
-
   (db.phieus || []).filter(p => p.month && p.month.startsWith(selectedYear)).forEach(p => {
     const amt = p.total || 0; totalCreated += amt; if (p.paid) totalReceived += amt;
     const mIndex = parseInt(p.month.split('-')[1]) - 1;
     if(mIndex >= 0 && mIndex <= 11) { monthlyData[mIndex].created += amt; if (p.paid) monthlyData[mIndex].received += amt; }
   });
-
   document.getElementById('stats-year-grid').innerHTML = `
     <div class="stat-card" style="border:2px solid var(--teal-light);"><div class="stat-num" style="font-size:1.35rem;">${fmt(totalCreated)}đ</div><div class="stat-label">Tổng học phí</div></div>
     <div class="stat-card" style="border:2px solid #c6f6d5;background:#f0fff4;"><div class="stat-num" style="font-size:1.35rem;color:#38a169;">${fmt(totalReceived)}đ</div><div class="stat-label" style="color:#2f855a;">Học phí thực nhận</div></div>
     <div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5; grid-column: 1 / -1;"><div class="stat-num-unpaid" style="font-size:1.35rem;">${fmt(totalCreated - totalReceived)}đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>
   `;
-
   let activeMonths = 0; monthlyData.forEach(d => { if(d.created > 0) activeMonths++; });
   document.getElementById('avg-revenue-display').textContent = fmt(activeMonths > 0 ? Math.round(totalCreated / activeMonths) : 0) + 'đ';
-
   if (revenueChartInstance) revenueChartInstance.destroy();
   revenueChartInstance = new Chart(document.getElementById('revenueChart').getContext('2d'), {
     type: 'bar', data: { labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'], datasets: [{ label: 'Tổng học phí (đ)', data: monthlyData.map(d => d.created), backgroundColor: '#3bbfad', borderRadius: 6 }] },
@@ -1265,13 +1673,11 @@ function renderStatsMonthly() {
   let totalCreated = 0; let totalReceived = 0;
   const monthPhieus = (db.phieus || []).filter(p => p.month === filterMonth);
   monthPhieus.forEach(p => { const amt = p.total || 0; totalCreated += amt; if (p.paid) totalReceived += amt; });
-
   document.getElementById('stats-month-grid').innerHTML = `
     <div class="stat-card" style="border:2px solid var(--teal-light);"><div class="stat-num" style="font-size:1.35rem;">${fmt(totalCreated)}đ</div><div class="stat-label">Tổng học phí</div></div>
     <div class="stat-card" style="border:2px solid #c6f6d5;background:#f0fff4;"><div class="stat-num" style="font-size:1.35rem;color:#38a169;">${fmt(totalReceived)}đ</div><div class="stat-label" style="color:#2f855a;">Học phí thực nhận</div></div>
     <div class="stat-card" style="border:2px solid #fed7d7;background:#fff5f5; grid-column: 1 / -1;"><div class="stat-num-unpaid" style="font-size:1.35rem;">${fmt(totalCreated - totalReceived)}đ</div><div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div></div>
   `;
-
   document.getElementById('stats-student-list').innerHTML = monthPhieus.length ? monthPhieus.map(p => `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px dashed var(--border);">
       <div><div style="font-weight:800;font-size:0.95rem;color:var(--teal-dark);">🎓 ${p.studentName}</div><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">${p.sessions} buổi</div></div>
@@ -1281,7 +1687,7 @@ function renderStatsMonthly() {
     </div>`).join('') : `<div class="empty-state"><p>Chưa có phiếu thu nào trong ${formatMonth(filterMonth)}</p></div>`;
 }
 
-// ===== UTILS & MODALS =====
+// ===== UTILS =====
 function fmt(n) { return Number(n).toLocaleString('vi-VN'); }
 function formatMonth(m) { return m ? `Tháng ${parseInt(m.split('-')[1])}/${m.split('-')[0]}` : ''; }
 function openModal(id) { document.getElementById(id).classList.add('open'); }
