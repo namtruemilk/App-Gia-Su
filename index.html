@@ -22,15 +22,24 @@
     --radius: 18px;
   }
   
-  /* CHẾ ĐỘ TỐI (DARK MODE) */
+  /* BẢNG MÀU DARK MODE MỚI - SIÊU NỊNH MẮT, ĐỘ TƯƠNG PHẢN CAO */
   body.dark {
-    --bg: #121418; --white: #1e2229; --text: #e2e8f0; --text-light: #a0aec0;
-    --border: #2d3748; --teal-light: #183834; --yellow-light: #3d3419;
-    --pink-light: #3b1626; --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --bg: #0f172a; /* Nền xanh đen slate cực dịu mắt */
+    --white: #1e293b; /* Nền các thẻ Card nổi bật hơn nền chính */
+    --text: #f8fafc; /* Chữ trắng tuyết, cực kỳ rõ nét */
+    --text-light: #cbd5e1; /* Chữ phụ màu xám sáng, dễ đọc */
+    --border: #334155; /* Viền thẻ đậm đà hơn */
+    --teal-light: #115e59; /* Nền nhạt của các thẻ nhấn mạnh */
+    --teal-dark: #2dd4bf; /* CHỮ TIÊU ĐỀ: Xanh ngọc phát sáng */
+    --teal: #14b8a6; /* Màu nút bấm xanh ngọc bích */
+    --yellow-light: #451a03;
+    --pink-light: #4c0519; 
+    --pink: #fb7185; /* Điểm nhấn màu hồng neon */
+    --shadow: 0 4px 24px rgba(0,0,0,0.6);
   }
-  body.dark .login-box { background: rgba(30, 34, 41, 0.85); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-  body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
-  body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; } /* Luôn giữ phiếu học phí nền trắng để in */
+  body.dark .login-box { background: rgba(30, 41, 59, 0.85); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+  body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f8fafc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
+  body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; } /* Phiếu học phí luôn giữ nền trắng để in đẹp */
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
@@ -41,6 +50,7 @@
     position: fixed; inset: 0; z-index: 999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     background-color: var(--bg);
+    /* THAY LINK ẢNH MÁY TÍNH VÀO BÊN DƯỚI */
     background-image: url('anhngangmaytinh.png'); 
     background-size: cover; background-position: center; background-repeat: no-repeat;
   }
@@ -50,7 +60,10 @@
     display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s;
   }
   @media (max-width: 640px) {
-    #login-screen { background-image: url('anhngangdienthoai.png'); }
+    #login-screen {
+      /* THAY LINK ẢNH ĐIỆN THOẠI VÀO BÊN DƯỚI */
+      background-image: url('anhngangdienthoai.png'); 
+    }
   }
 
   /* ===== NAV ===== */
@@ -87,7 +100,7 @@
   .btn-outline { background: none; border: 2px solid var(--teal); color: var(--teal); }
   .btn-outline:hover { background: var(--teal-light); }
   .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
-  .btn-danger { background: #fed7d7; color: #c53030; }
+  .btn-danger { background: #fed7d7; color: #ffffff; }
 
   /* ===== FORM ===== */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -97,11 +110,29 @@
   input, select, textarea { padding: 9px 13px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.9rem; color: var(--text); background: var(--white); transition: all .2s; width: 100%; box-sizing: border-box; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal); }
   textarea { resize: vertical; min-height: 70px; }
+  
+  /* Tuỳ chỉnh danh sách thả xuống */
+  select {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3748' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+    padding-right: 32px !important; cursor: pointer;
+  }
 
-  .type-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:20px; border:2px solid var(--border); cursor:pointer; font-weight:700; font-size:.85rem; transition:all .2s; flex:1; justify-content:center; }
+  .type-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:20px; border:2px solid var(--border); cursor:pointer; font-weight:700; font-size:.85rem; transition:all .2s; flex:1; justify-content:center; color: var(--text); }
   .type-btn.active { border-color:var(--teal); background:var(--teal-light); color:var(--teal-dark); }
   .badge-private { background:#e8f4fd; color:#2b6cb0; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
   .badge-group { background:#fef3c7; color:#b45309; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
+
+  /* ===== CSS CHO NÚT CHỌN HỌC SINH ĐIỂM DANH NHÓM ===== */
+  .student-check-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg); padding: 8px 14px; border-radius: 20px;
+    margin: 4px 4px 4px 0; cursor: pointer; border: 2px solid var(--border);
+    font-size: 0.85rem; font-weight: 700; color: var(--text); transition: all 0.2s;
+  }
+  .student-check-badge:hover { border-color: var(--teal); }
+  .student-check-badge input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; margin: 0; }
 
   /* ===== STUDENT LIST ===== */
   .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
@@ -126,6 +157,7 @@
   .calendar-layout { display: grid; gap: 20px; }
   @media (min-width: 650px) { .calendar-layout { grid-template-columns: 1.5fr 1fr; align-items: start; } }
   .sticky-note { background: var(--yellow-light); border-left: 4px solid #f59e0b; padding: 16px; border-radius: 10px; font-size: 0.85rem; color: #78350f; line-height: 1.5; }
+  body.dark .sticky-note { color: var(--text-light); }
   .multi-badge { position: absolute; top: -5px; right: -5px; background: #2d3748; color: white; font-size: 0.65rem; font-weight: 900; padding: 2px 6px; border-radius: 10px; z-index: 2; }
 
   /* ===== PHIEU & STATS ===== */
@@ -271,13 +303,13 @@
     </div>
   </div>
 
-  <!-- GROUPS PAGE (TÍNH NĂNG MỚI) -->
+  <!-- GROUPS PAGE (TÍNH NĂNG MỚI ĐÃ CÓ CHECKBOX) -->
   <div id="page-groups" class="page">
     <div class="card">
       <div class="card-header">
         <span class="card-title">👥 Quản lý & Điểm danh Nhóm</span>
       </div>
-      <p style="font-size:0.85rem; color:var(--text-light); margin-bottom: 15px; line-height: 1.5;">Hệ thống tự động gom nhóm dựa trên trường "Lớp" của học sinh. Bạn có thể điểm danh hàng loạt cho cả nhóm chỉ với 1 thao tác.</p>
+      <p style="font-size:0.85rem; color:var(--text-light); margin-bottom: 15px; line-height: 1.5;">Hệ thống tự động gom nhóm dựa trên trường "Lớp". Bạn có thể bỏ tích những học sinh nghỉ phép trước khi bấm điểm danh.</p>
       <div id="group-list"></div>
     </div>
   </div>
@@ -317,7 +349,7 @@
     </div>
   </div>
 
-  <!-- GRADES PAGE (TÍNH NĂNG MỚI) -->
+  <!-- GRADES PAGE -->
   <div id="page-grades" class="page">
     <div class="card">
       <div class="card-header"><span class="card-title">📈 Sổ điểm & Tiến độ học tập</span></div>
@@ -537,12 +569,12 @@
 <script>
 // BIẾN TOÀN CỤC & TẠO LỊCH CỐ ĐỊNH KHI TRANG LOAD
 let revenueChartInstance = null;
-let gradeChartInstance = null; // Biến cho sổ điểm
+let gradeChartInstance = null;
 const now = new Date();
 let currentYear = now.getFullYear();
 let currentMonth = now.getMonth();
 let currentUser = null;
-let db = { students: [], attendance: {}, phieus: [], grades: {} }; // Đã thêm grades
+let db = { students: [], attendance: {}, phieus: [], grades: {} };
 let saveTimeout = null;
 let editingStudentId = null;
 let selectedStudentId = null;
@@ -627,7 +659,7 @@ async function loadDb() {
     if (doc.exists) {
       db = doc.data();
       db.students = db.students || []; db.attendance = db.attendance || {}; db.phieus = db.phieus || [];
-      db.grades = db.grades || {}; // Khởi tạo an toàn cho sổ điểm
+      db.grades = db.grades || {};
     } else db = { students: [], attendance: {}, phieus: [], grades: {} };
   } catch(e) {
     db = JSON.parse(localStorage.getItem('giasu_db_' + currentUser.uid) || '{"students":[],"attendance":{},"phieus":[],"grades":{}}');
@@ -672,7 +704,6 @@ auth.onAuthStateChanged(async user => {
   }
 });
 
-// Điều hướng trang đã được cập nhật thêm 2 chức năng mới
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -682,14 +713,14 @@ function showPage(id) {
   
   if (id === 'page-home') renderHome();
   if (id === 'page-students') renderStudents();
-  if (id === 'page-groups') renderGroups(); // Chức năng Nhóm Lớp
+  if (id === 'page-groups') renderGroups();
   if (id === 'page-attendance') renderAttStudents();
-  if (id === 'page-grades') renderGradeStudentSelect(); // Chức năng Sổ Điểm
+  if (id === 'page-grades') renderGradeStudentSelect();
   if (id === 'page-phieu') { renderPhieuStudentSelect(); renderPhieuHistory(); renderQRPreview(); }
   if (id === 'page-stats') renderStats();
 }
 
-// ===== TÍNH NĂNG MỚI: QUẢN LÝ NHÓM LỚP =====
+// ===== TÍNH NĂNG MỚI: QUẢN LÝ NHÓM LỚP (ĐÃ CÓ CHECKBOX) =====
 function renderGroups() {
   const groups = {};
   db.students.forEach(s => {
@@ -698,37 +729,49 @@ function renderGroups() {
     groups[g].push(s);
   });
   let html = '';
+  let gIndex = 0;
   for(let g in groups) {
     html += `
-      <div class="card" style="border: 2px solid var(--border); box-shadow: none; margin-bottom: 12px; padding: 18px;">
+      <div class="card" id="group-card-${gIndex}" style="border: 2px solid var(--border); box-shadow: none; margin-bottom: 12px; padding: 18px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <h4 style="color:var(--teal-dark); font-weight:800; font-size:1.05rem;">🏷️ Nhóm: ${g} <span style="font-size:0.8rem; color:var(--text-light); font-weight:600;">(${groups[g].length} HS)</span></h4>
-          <button class="btn btn-primary btn-sm" onclick="bulkAttend('${g}')">✅ Điểm danh Nhóm hôm nay</button>
+          <button class="btn btn-primary btn-sm" onclick="bulkAttend(${gIndex}, '${g}')">✅ Điểm danh Nhóm hôm nay</button>
         </div>
-        <div style="font-size:0.85rem; color:var(--text-light); margin-top:10px; line-height:1.5;">
-          ${groups[g].map(s => `<span style="display:inline-block; background:var(--bg); padding:4px 10px; border-radius:15px; margin:2px 4px 2px 0;">👤 ${s.name}</span>`).join('')}
+        <div style="margin-top:12px;">
+          ${groups[g].map(s => `
+            <label class="student-check-badge">
+              <input type="checkbox" value="${s.id}" class="group-student-check" checked>
+              👤 ${s.name}
+            </label>
+          `).join('')}
         </div>
       </div>
     `;
+    gIndex++;
   }
   document.getElementById('group-list').innerHTML = html || '<div class="empty-state">Chưa có học sinh nào.</div>';
 }
 
-function bulkAttend(gradeName) {
-  if(!confirm(`Xác nhận điểm danh "Học nhóm" cho toàn bộ nhóm ${gradeName} vào ngày hôm nay?`)) return;
+function bulkAttend(gIndex, gradeName) {
+  const card = document.getElementById(`group-card-${gIndex}`);
+  const checkboxes = card.querySelectorAll('.group-student-check:checked');
+  const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+  
+  if (selectedIds.length === 0) {
+    return alert('Vui lòng để lại dấu tích cho ít nhất 1 học sinh!');
+  }
+  if(!confirm(`Xác nhận điểm danh "Học nhóm" cho ${selectedIds.length} học sinh đang được tích trong nhóm ${gradeName} vào hôm nay?`)) return;
+  
   const today = new Date().getDate();
   const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
   
-  db.students.forEach(s => {
-    const g = s.grade || 'Chưa phân lớp';
-    if(g === gradeName) {
-      if (!db.attendance[s.id]) db.attendance[s.id] = {};
-      if (!db.attendance[s.id][key]) db.attendance[s.id][key] = {};
-      db.attendance[s.id][key][today] = 'group'; // Đánh dấu là học nhóm
-    }
+  selectedIds.forEach(sid => {
+    if (!db.attendance[sid]) db.attendance[sid] = {};
+    if (!db.attendance[sid][key]) db.attendance[sid][key] = {};
+    db.attendance[sid][key][today] = 'group'; // Đánh dấu là học nhóm
   });
   save(); 
-  alert('✅ Đã điểm danh thành công cho cả nhóm!');
+  alert('✅ Đã điểm danh thành công!');
 }
 
 // ===== TÍNH NĂNG MỚI: SỔ ĐIỂM & TIẾN ĐỘ =====
@@ -756,7 +799,7 @@ function renderGrades() {
       </div>
       <div style="display:flex; align-items:center; gap:12px;">
         <span style="font-weight:900; color:var(--pink); font-size:1.2rem; background:var(--pink-light); padding:2px 10px; border-radius:10px;">${g.score}</span>
-        <button class="btn btn-danger btn-sm" onclick="deleteGrade('${sid}', '${g.id}')">✕</button>
+        <button class="btn btn-danger btn-sm" style="color:white" onclick="deleteGrade('${sid}', '${g.id}')">✕</button>
       </div>
     </div>
   `).reverse().join('') : '<div class="empty-state">Chưa có điểm số nào. Hãy thêm điểm ở trên.</div>';
@@ -1007,7 +1050,6 @@ function handleQRUpload(event) {
   reader.onload = e => { 
     const originalDataUrl = e.target.result;
     
-    // Tạo ảnh ẩn để Canvas đọc
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
@@ -1016,12 +1058,10 @@ function handleQRUpload(event) {
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0, img.width, img.height);
       
-      // Dùng jsQR quét toàn bộ ảnh
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, imageData.width, imageData.height);
       
       if (code) {
-        // Nếu tìm thấy mã QR, lấy tọa độ 4 góc của mã
         const loc = code.location;
         const minX = Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x);
         const minY = Math.min(loc.topLeftCorner.y, loc.topRightCorner.y);
@@ -1031,7 +1071,6 @@ function handleQRUpload(event) {
         const width = maxX - minX;
         const height = maxY - minY;
         
-        // Thêm một chút viền trắng xung quanh (khoảng 10%) cho đẹp
         const padX = width * 0.1;
         const padY = height * 0.1;
         
@@ -1040,22 +1079,18 @@ function handleQRUpload(event) {
         const cropW = Math.min(canvas.width - cropX, width + padX * 2);
         const cropH = Math.min(canvas.height - cropY, height + padY * 2);
         
-        // Cắt ảnh bằng Canvas thứ 2
         const cropCanvas = document.createElement('canvas');
         cropCanvas.width = cropW;
         cropCanvas.height = cropH;
         const cropCtx = cropCanvas.getContext('2d');
         
-        // Tô nền trắng cho ảnh lỡ có viền trong suốt
         cropCtx.fillStyle = "#ffffff";
         cropCtx.fillRect(0, 0, cropW, cropH);
         
         cropCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
         
-        // Lưu ảnh ĐÃ CẮT
         db.qrCode = cropCanvas.toDataURL('image/png');
       } else {
-        // Nếu AI không tìm thấy mã QR nào, giữ nguyên ảnh gốc như logic cũ
         db.qrCode = originalDataUrl;
       }
       
