@@ -257,7 +257,13 @@
     .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px; }
     .stat-card { padding: 12px 8px; border-radius: 12px; }
     select { max-width: 100%; box-sizing: border-box; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-    .form-grid { grid-template-columns: 1fr; }
+    
+    /* FIX TRÀN MÀN HÌNH Ở ĐÂY */
+    .form-grid { grid-template-columns: minmax(0, 1fr); }
+    input, select, textarea { max-width: 100%; min-width: 0; }
+    input[type="date"] { display: block; max-width: 100%; }
+    /* KẾT THÚC FIX */
+
     .student-grid { grid-template-columns: 1fr; gap: 10px; }
     .phieu { width: 100% !important; max-width: 100% !important; }
     .modal-overlay { align-items: flex-end; padding: 0; }
@@ -446,10 +452,27 @@
     </div>
     
     <div id="grade-content" style="display:none;">
+      <!-- [MỚI] TABS LỌC MÔN HỌC -->
+      <div class="card" id="grade-subject-filter-card" style="display:none; margin-bottom:20px;">
+        <h4 style="color:var(--teal-dark); font-weight:800; margin-bottom:12px;">📚 Lọc theo môn học</h4>
+        <div id="grade-subject-tabs" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+      </div>
+
       <div class="card">
         <h4 style="color:var(--teal-dark); font-weight:800; margin-bottom:12px;">✏️ Nhập điểm mới</h4>
         <div class="form-grid">
           <input type="date" id="grade-date" class="full">
+          
+          <!-- [MỚI] INPUT TÊN MÔN HỌC -->
+          <input type="text" id="grade-subject-input" placeholder="Tên môn học (VD: Toán, Lý)..." class="full" list="subject-list">
+          <datalist id="subject-list">
+            <option value="Toán"></option>
+            <option value="Vật lý"></option>
+            <option value="Hóa học"></option>
+            <option value="Tiếng Anh"></option>
+            <option value="Ngữ văn"></option>
+          </datalist>
+
           <input type="text" id="grade-name" placeholder="Tên bài (VD: 15 phút, Giữa kỳ)..." class="full">
           <input type="number" id="grade-score" placeholder="Điểm số (0-10)..." class="full" step="0.25">
           <!-- [MỚI] TARGET SCORE INPUT -->
@@ -712,6 +735,7 @@
 // ===== BIẾN TOÀN CỤC =====
 let revenueChartInstance = null;
 let gradeChartInstance = null;
+let currentGradeSubject = 'Tất cả'; // [MỚI] Biến theo dõi môn học đang chọn
 const now = new Date();
 let currentYear = now.getFullYear();
 let currentMonth = now.getMonth();
@@ -843,7 +867,7 @@ function showPage(id) {
   if (id === 'page-students') renderStudents();
   if (id === 'page-groups') renderGroups();
   if (id === 'page-attendance') renderAttStudents();
-  if (id === 'page-grades') renderGradeStudentSelect();
+  if (id === 'page-grades') { currentGradeSubject = 'Tất cả'; renderGradeStudentSelect(); }
   if (id === 'page-phieu') { renderPhieuStudentSelect(); renderPhieuHistory(); renderQRPreview(); }
   if (id === 'page-stats') renderStats();
 }
@@ -901,6 +925,11 @@ function renderGradeStudentSelect() {
   document.getElementById('grade-content').style.display = 'none';
 }
 
+function setGradeSubject(sub) {
+  currentGradeSubject = sub;
+  renderGrades();
+}
+
 function renderGrades() {
   const sid = document.getElementById('grade-student').value;
   if(!sid) { document.getElementById('grade-content').style.display = 'none'; return; }
@@ -908,15 +937,46 @@ function renderGrades() {
   document.getElementById('grade-date').valueAsDate = new Date();
 
   db.grades = db.grades || {};
-  const grades = db.grades[sid] || [];
-  grades.sort((a,b) => new Date(a.date) - new Date(b.date));
+  const allGrades = db.grades[sid] || [];
+  allGrades.sort((a,b) => new Date(a.date) - new Date(b.date));
 
-  // [MỚI] Hiển thị mục tiêu điểm hiện tại
+  // [MỚI] Lấy danh sách các môn học để tạo Tab Lọc
+  const subjects = [...new Set(allGrades.map(g => g.subject || 'Chung'))];
+  if (subjects.length > 0 && !subjects.includes(currentGradeSubject) && currentGradeSubject !== 'Tất cả') {
+      currentGradeSubject = 'Tất cả';
+  }
+
+  // Render các nút Tabs
+  let tabsHtml = `<button class="btn btn-sm ${currentGradeSubject === 'Tất cả' ? 'btn-primary' : 'btn-outline'}" onclick="setGradeSubject('Tất cả')">Tất cả</button>`;
+  subjects.forEach(sub => {
+      tabsHtml += `<button class="btn btn-sm ${currentGradeSubject === sub ? 'btn-primary' : 'btn-outline'}" onclick="setGradeSubject('${sub}')">${sub}</button>`;
+  });
+  document.getElementById('grade-subject-tabs').innerHTML = tabsHtml;
+  document.getElementById('grade-subject-filter-card').style.display = subjects.length > 0 ? 'block' : 'none';
+
+  // Lọc điểm theo môn học
+  const grades = currentGradeSubject === 'Tất cả' ? allGrades : allGrades.filter(g => (g.subject || 'Chung') === currentGradeSubject);
+
+  // Tự động điền tên môn học vào ô input nếu đang xem riêng 1 môn
+  if (currentGradeSubject !== 'Tất cả') {
+      document.getElementById('grade-subject-input').value = currentGradeSubject;
+  }
+
+  // [MỚI] Xử lý hiển thị mục tiêu theo môn học
   const targets = db.gradeTargets || {};
-  const target = targets[sid];
+  let targetObj = targets[sid];
+  // Chuyển đổi dữ liệu cũ (nếu mục tiêu đang lưu dưới dạng số chung)
+  if (typeof targetObj === 'number' || typeof targetObj === 'string') {
+      targetObj = { 'Chung': parseFloat(targetObj) };
+      targets[sid] = targetObj;
+  }
+  targetObj = targetObj || {};
+  const targetKey = currentGradeSubject === 'Tất cả' ? 'Chung' : currentGradeSubject;
+  const target = targetObj[targetKey];
+
   if (target) {
     document.getElementById('grade-target').value = target;
-    document.getElementById('grade-target-status').textContent = `✅ Mục tiêu hiện tại: ${target} điểm`;
+    document.getElementById('grade-target-status').textContent = `✅ Mục tiêu hiện tại (Môn ${targetKey}): ${target} điểm`;
   } else {
     document.getElementById('grade-target').value = '';
     document.getElementById('grade-target-status').textContent = 'Chưa đặt mục tiêu';
@@ -925,7 +985,7 @@ function renderGrades() {
   document.getElementById('grade-history').innerHTML = grades.length ? grades.map(g => `
     <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px dashed var(--border);">
       <div>
-        <strong style="color:var(--text); font-size:0.95rem;">📝 ${g.name}</strong>
+        <strong style="color:var(--text); font-size:0.95rem;">📝 ${g.name} ${g.subject && g.subject !== 'Chung' ? `<span style="font-size:0.75rem; color:#fff; background:var(--teal); padding:2px 6px; border-radius:10px; margin-left:4px;">${g.subject}</span>` : ''}</strong>
         <div style="font-size:0.75rem; color:var(--text-light); margin-top:3px;">📅 ${g.date.split('-').reverse().join('/')}</div>
       </div>
       <div style="display:flex; align-items:center; gap:12px;">
@@ -952,7 +1012,7 @@ function renderGrades() {
     }]
   };
 
-  // [MỚI] Thêm target line nếu có
+  // Thêm target line nếu có
   if (target && grades.length > 0) {
     chartData.datasets.push({
       label: `🎯 Mục tiêu: ${target}`,
@@ -983,29 +1043,43 @@ function renderGrades() {
   });
 }
 
-// [MỚI] Lưu mục tiêu điểm số
+// [MỚI] Lưu mục tiêu điểm số (Hỗ trợ lưu theo môn học)
 function saveGradeTarget() {
   const sid = document.getElementById('grade-student').value;
   if(!sid) return alert('Vui lòng chọn học sinh trước!');
   const target = parseFloat(document.getElementById('grade-target').value);
   if(isNaN(target) || target < 0 || target > 10) return alert('Vui lòng nhập mục tiêu điểm hợp lệ (0-10)!');
+  
   db.gradeTargets = db.gradeTargets || {};
-  db.gradeTargets[sid] = target;
+  if (typeof db.gradeTargets[sid] === 'number' || typeof db.gradeTargets[sid] === 'string') {
+      db.gradeTargets[sid] = { 'Chung': parseFloat(db.gradeTargets[sid]) };
+  }
+  db.gradeTargets[sid] = db.gradeTargets[sid] || {};
+  const targetKey = currentGradeSubject === 'Tất cả' ? 'Chung' : currentGradeSubject;
+  db.gradeTargets[sid][targetKey] = target;
+  
   save();
-  document.getElementById('grade-target-status').textContent = `✅ Đã lưu mục tiêu: ${target} điểm`;
+  document.getElementById('grade-target-status').textContent = `✅ Đã lưu mục tiêu (Môn ${targetKey}): ${target} điểm`;
   renderGrades();
 }
 
 function saveGrade() {
   const sid = document.getElementById('grade-student').value;
   const date = document.getElementById('grade-date').value;
+  const subject = document.getElementById('grade-subject-input').value.trim() || 'Chung';
   const name = document.getElementById('grade-name').value.trim();
   const score = parseFloat(document.getElementById('grade-score').value);
+  
   if(!sid || !date || !name || isNaN(score)) return alert('Vui lòng nhập đầy đủ thông tin và điểm số hợp lệ!');
+  
   db.grades = db.grades || {};
   db.grades[sid] = db.grades[sid] || [];
-  db.grades[sid].push({ id: Date.now().toString(), date, name, score });
-  save(); renderGrades();
+  db.grades[sid].push({ id: Date.now().toString(), date, subject, name, score });
+  
+  save(); 
+  currentGradeSubject = subject; // Tự động chuyển qua tab môn học vừa nhập
+  renderGrades();
+  
   document.getElementById('grade-name').value = '';
   document.getElementById('grade-score').value = '';
 }
@@ -1284,8 +1358,16 @@ function generateZaloMessageContent() {
   let avgText = '';
   if(grades.length > 0) {
     const avg = (grades.reduce((sum, g) => sum + g.score, 0) / grades.length).toFixed(1);
-    const target = db.gradeTargets?.[sid];
-    const targetNote = target ? (parseFloat(avg) >= target ? ` (đã đạt mục tiêu 🎯)` : ` (mục tiêu ${target} - đang nỗ lực 💪)`) : '';
+    let targetNote = '';
+    // Thích ứng với lưu mục tiêu theo môn
+    const targetObj = db.gradeTargets?.[sid];
+    if (targetObj) {
+      // Lấy mục tiêu chung làm đại diện (nếu có)
+      const target = typeof targetObj === 'number' ? targetObj : targetObj['Chung'];
+      if(target) {
+         targetNote = (parseFloat(avg) >= target ? ` (đã đạt mục tiêu 🎯)` : ` (mục tiêu ${target} - đang nỗ lực 💪)`);
+      }
+    }
     avgText = `Điểm trung bình các bài kiểm tra là *${avg}*${targetNote}. `;
   }
 
@@ -1301,7 +1383,7 @@ function generateZaloMessageContent() {
 
   const message = `Dạ em chào anh/chị ạ! 🌟
 
-Em gửi báo ccáo học tập tháng ${monthNum}/${yearNum} của bé *${s.name}* ạ.
+Em gửi báo cáo học tập tháng ${monthNum}/${yearNum} của bé *${s.name}* ạ.
 
 📚 *Tháng này bé đi học ${sessions} buổi* (${p > 0 ? `${p} buổi riêng` : ''}${p > 0 && g > 0 ? ', ' : ''}${g > 0 ? `${g} buổi nhóm` : ''}).
 
