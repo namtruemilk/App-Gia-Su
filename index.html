@@ -6,9 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Quản Lý Học Phí — Gia Sư</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- Thêm thư viện Chart.js để vẽ biểu đồ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Thêm thư viện jsQR để tự động nhận diện và cắt mã QR -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <style>
   :root {
@@ -22,77 +20,54 @@
     --radius: 18px;
   }
   
-  /* BẢNG MÀU DARK MODE MỚI - SIÊU NỊNH MẮT, ĐỘ TƯƠNG PHẢN CAO, CHỮ SÁNG RỰC RỠ */
+  /* BẢNG MÀU DARK MODE MỚI */
   body.dark {
-    --bg: #0b1120; /* Nền xanh đen sâu thẳm, dịu mắt tuyệt đối */
-    --white: #1e293b; /* Nền các thẻ Card xám xanh nổi bật */
-    --text: #ffffff; /* Chữ trắng tinh khiết, cực kỳ rõ nét */
-    --text-light: #94a3b8; /* Chữ phụ màu xám sáng ngọc, dễ đọc */
-    --border: #334155; /* Viền thẻ tinh tế */
-    --teal-light: #134e4a; /* Nền nhạt cho các vùng chọn */
-    --teal-dark: #5eead4; /* CHỮ TIÊU ĐỀ: Xanh ngọc Neon phát sáng */
-    --teal: #2dd4bf; /* Nút bấm xanh ngọc bích sáng */
+    --bg: #0b1120; 
+    --white: #1e293b; 
+    --text: #ffffff; 
+    --text-light: #94a3b8; 
+    --border: #334155; 
+    --teal-light: #134e4a; 
+    --teal-dark: #5eead4; 
+    --teal: #2dd4bf; 
     --yellow-light: #451a03;
     --pink-light: #701a75; 
-    --pink: #f472b6; /* Điểm nhấn hồng Neon rực rỡ */
-    --shadow: 0 8px 30px rgba(0,0,0,0.8); /* Đổ bóng sâu hơn cho thẻ 3D */
+    --pink: #f472b6; 
+    --shadow: 0 8px 30px rgba(0,0,0,0.8); 
   }
   body.dark .login-box { background: rgba(30, 41, 59, 0.85); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
   body.dark select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); }
-  body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; } /* Phiếu in luôn giữ nền trắng */
-  
-  /* Cứu cánh các Tag và màu cứng trong Code cũ cho Dark Mode */
+  body.dark .phieu { background: #ffffff !important; color: #2d3748 !important; }
   body.dark .badge-private { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
   body.dark .badge-group { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-  body.dark .stat-num-unpaid { color: #f87171 !important; } /* Màu đỏ san hô Neon cho nợ tiền */
+  body.dark .stat-num-unpaid { color: #f87171 !important; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; min-height: -webkit-fill-available; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; transition: background-color 0.3s, color 0.3s; }
 
-  /* ===== MÀN HÌNH ĐĂNG NHẬP ===== */
-  #login-screen {
-    position: fixed; inset: 0; z-index: 999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background-color: var(--bg);
-    background-image: url('anhngangmaytinh.png'); 
-    background-size: cover; background-position: center; background-repeat: no-repeat;
-  }
-  .login-box {
-    background: rgba(255, 255, 255, 0.85); padding: 40px 30px; border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s;
-  }
-  @media (max-width: 640px) {
-    #login-screen { background-image: url('anhngangdienthoai.png'); }
-  }
+  #login-screen { position: fixed; inset: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg); background-image: url('anhngangmaytinh.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+  .login-box { background: rgba(255, 255, 255, 0.85); padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s; }
+  @media (max-width: 640px) { #login-screen { background-image: url('anhngangdienthoai.png'); } }
 
-  /* ===== NAV ===== */
   .nav { background: var(--white); border-bottom: 2px solid var(--teal-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(59,191,173,0.1); transform: translateZ(0); transition: 0.3s; }
   .nav-brand { font-size: 0.95rem; font-weight: 900; color: var(--teal-dark); display: flex; align-items: center; gap: 8px; }
   .nav-tabs { display: flex; gap: 4px; }
   .nav-tab { padding: 6px 14px; border-radius: 20px; border: none; background: none; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: var(--text-light); cursor: pointer; transition: all .2s; }
   .nav-tab.active { background: var(--teal); color: #ffffff; }
   .nav-tab:hover:not(.active) { background: var(--teal-light); color: var(--teal-dark); }
-  
   .theme-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; transition: transform 0.2s; }
   .theme-btn:hover { transform: scale(1.1); }
 
-  /* ===== MAIN & CARDS & ANIMATION ===== */
   .main { max-width: 960px; margin: 0 auto; padding: 24px 16px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  
   .page { display: none; }
   .page.active { display: block; animation: fadeSlideUp 0.35s ease-out; }
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
   .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px; transition: 0.3s; }
   .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
   .card-title { font-size: 1.1rem; font-weight: 800; color: var(--teal-dark); }
 
-  /* ===== BUTTONS ===== */
   .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 30px; border: none; font-family: inherit; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all .2s; }
   .btn-primary { background: var(--teal); color: #ffffff; }
   .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,191,173,0.35); }
@@ -102,7 +77,6 @@
   .btn-sm { padding: 5px 12px; font-size: 0.78rem; }
   .btn-danger { background: #fed7d7; color: #c53030; }
 
-  /* ===== FORM ===== */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
   .form-group.full { grid-column: 1/-1; }
@@ -111,29 +85,16 @@
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal); }
   textarea { resize: vertical; min-height: 70px; }
   
-  select {
-    -webkit-appearance: none; -moz-appearance: none; appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3748' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
-    padding-right: 32px !important; cursor: pointer;
-  }
+  select { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3748' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; padding-right: 32px !important; cursor: pointer; }
 
   .type-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:20px; border:2px solid var(--border); cursor:pointer; font-weight:700; font-size:.85rem; transition:all .2s; flex:1; justify-content:center; color: var(--text); }
   .type-btn.active { border-color:var(--teal); background:var(--teal-light); color:var(--teal-dark); }
   .badge-private { background:#e8f4fd; color:#2b6cb0; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
   .badge-group { background:#fef3c7; color:#b45309; font-size:.7rem; font-weight:800; padding:2px 8px; border-radius:20px; }
-
-  /* ===== CSS CHO NÚT CHỌN HỌC SINH ĐIỂM DANH NHÓM ===== */
-  .student-check-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--bg); padding: 8px 14px; border-radius: 20px;
-    margin: 4px 4px 4px 0; cursor: pointer; border: 2px solid var(--border);
-    font-size: 0.85rem; font-weight: 700; color: var(--text); transition: all 0.2s;
-  }
+  .student-check-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); padding: 8px 14px; border-radius: 20px; margin: 4px 4px 4px 0; cursor: pointer; border: 2px solid var(--border); font-size: 0.85rem; font-weight: 700; color: var(--text); transition: all 0.2s; }
   .student-check-badge:hover { border-color: var(--teal); }
   .student-check-badge input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; margin: 0; }
 
-  /* ===== STUDENT LIST ===== */
   .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
   .student-card { background: var(--white); border-radius: 14px; border: 2px solid var(--border); padding: 16px; cursor: pointer; transition: all .2s; position: relative; }
   .student-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,191,173,0.15); }
@@ -141,7 +102,6 @@
   .student-name { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 4px; }
   .student-meta { font-size: 0.8rem; color: var(--text-light); }
 
-  /* ===== ATTENDANCE & CALENDAR ===== */
   .month-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
   .month-nav { background: var(--teal-light); border: none; color: var(--teal-dark); font-size: 1.2rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: 900; }
   .month-label { font-weight: 800; font-size: 1.05rem; color: var(--text); }
@@ -159,7 +119,6 @@
   body.dark .sticky-note { color: var(--text-light); }
   .multi-badge { position: absolute; top: -5px; right: -5px; background: #2d3748; color: white; font-size: 0.65rem; font-weight: 900; padding: 2px 6px; border-radius: 10px; z-index: 2; }
 
-  /* ===== PHIEU & STATS ===== */
   .phieu-wrap { display: flex; justify-content: center; }
   .phieu { width: 340px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.13); font-family: 'Quicksand', sans-serif; background: white; }
   .phieu-header { background: var(--teal); padding: 22px 20px 18px; text-align: center; color: white; }
@@ -178,10 +137,8 @@
   .stat-num-unpaid { font-size: clamp(0.85rem, 2.2vw, 1.6rem); font-weight: 900; color: #e53e3e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .stat-label { font-size: 0.78rem; font-weight: 700; color: var(--text-light); margin-top: 2px; }
 
-  /* ===== CHỮ KÝ MOBILE ===== */
   .mobile-footer { display: none; text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--text-light); padding-top: 10px; padding-bottom: 20px; opacity: 0.7; }
 
-  /* ===== MODAL ===== */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(3px); }
   .modal-overlay.open { display: flex; animation: fadeInModal 0.2s ease; }
   @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
@@ -192,7 +149,6 @@
   
   .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
 
-  /* ===== MOBILE RESPONSIVE ===== */
   @media (max-width: 640px) {
     .nav { padding: 4px 8px; height: auto; min-height: 52px; display: flex; align-items: center; overflow: hidden; flex-wrap: nowrap; }
     .nav::-webkit-scrollbar { display: none; }
@@ -229,7 +185,8 @@
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="22" height="22">
       Đăng nhập với Google
     </button>
-    <div id="login-error" style="color:#e53e3e;font-size:.85rem;font-weight:700;display:none;max-width:250px;text-align:center;line-height:1.4;margin-top:10px;"></div>
+    <!-- THÊM THÔNG BÁO MÀU SẮC CHO ĐĂNG NHẬP REDIRECT -->
+    <div id="login-error" style="font-size:.85rem;font-weight:700;display:none;max-width:250px;text-align:center;line-height:1.4;margin-top:10px;"></div>
   </div>
 </div>
 
@@ -265,7 +222,7 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
     
-    <!-- TÍNH NĂNG MỚI: ĐẾM NGƯỢC THI VÀO 10 -->
+    <!-- ĐẾM NGƯỢC THI VÀO 10 -->
     <div class="card" style="background: linear-gradient(135deg, var(--teal-light), var(--bg)); border: 2px solid var(--teal);">
       <div class="card-header" style="margin-bottom:10px;">
         <span class="card-title">⏳ Đếm ngược kỳ thi</span>
@@ -447,7 +404,7 @@
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" onclick="printPhieu()">🖨️ In phiếu</button>
             <button class="btn btn-pink btn-sm" onclick="savePhieu()">💾 Lưu</button>
-            <!-- TÍNH NĂNG MỚI: NÚT GỬI ZALO -->
+            <!-- NÚT GỬI ZALO -->
             <button class="btn btn-sm" style="background:#0068ff; color:white; border:none;" onclick="openZaloModal()">💬 Gửi Zalo</button>
           </div>
         </div>
@@ -518,7 +475,7 @@
       <div class="form-group"><label>Lớp (Để chia nhóm)</label><input type="text" id="s-grade" placeholder="VD: Toán 9"></div>
       <div class="form-group"><label>Môn học</label><input type="text" id="s-subject"></div>
       
-      <!-- TÍNH NĂNG MỚI: MỤC TIÊU ĐIỂM SỐ VÀ NỢ BTVN -->
+      <!-- MỤC TIÊU ĐIỂM SỐ VÀ NỢ BTVN -->
       <div class="form-group"><label>Mục tiêu điểm số</label><input type="number" id="s-target" placeholder="VD: 8.5" step="0.25"></div>
       <div class="form-group"><label>Đang nợ BTVN</label><input type="number" id="s-hw" value="0"></div>
 
@@ -573,7 +530,7 @@
   </div>
 </div>
 
-<!-- TÍNH NĂNG MỚI: CỬA SỔ CHỈNH SỬA TIN NHẮN ZALO -->
+<!-- MODAL CỬA SỔ CHỈNH SỬA TIN NHẮN ZALO -->
 <div class="modal-overlay" id="modal-zalo">
   <div class="modal" style="max-width:440px;">
     <div class="modal-header">
@@ -631,8 +588,9 @@ function populateMonthSelects() {
     if (el) { el.innerHTML = options; el.value = options.includes(`value="${currentVal}"`) ? currentVal : defaultVal; }
   });
 }
+populateMonthSelects();
 
-// ===== FIREBASE INIT =====
+// ===== FIREBASE INIT & LOGIN NÂNG CẤP =====
 const firebaseConfig = {
   apiKey: "AIzaSyD_Bf1lv5o4iS0MQO3kByCXWaNOfBESmpc",
   authDomain: "namtruemilk-372004.firebaseapp.com",
@@ -647,19 +605,30 @@ const firestore = firebase.firestore();
 
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
+// 🚀 NÂNG CẤP: DÙNG REDIRECT ĐỂ TRÁNH LỖI CHẶN POPUP TRÊN ĐIỆN THOẠI
 function loginGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(err => {
-    document.getElementById('login-error').style.display = 'block';
-    if (err.code === 'auth/popup-blocked') {
-      document.getElementById('login-error').innerHTML = 'Trình duyệt đang chặn cửa sổ đăng nhập. Vui lòng cấp quyền mở Popup cho trang này!';
-    } else if (err.code === 'auth/cancelled-popup-request') {
-      document.getElementById('login-error').innerHTML = 'Tiến trình đăng nhập bị hủy. Vui lòng bấm thử lại!';
-    } else {
-      document.getElementById('login-error').textContent = 'Lỗi: ' + err.message;
-    }
+  const errorDiv = document.getElementById('login-error');
+  
+  errorDiv.style.display = 'block';
+  errorDiv.style.color = '#3bbfad';
+  errorDiv.textContent = 'Đang chuyển hướng sang Google...';
+  
+  auth.signInWithRedirect(provider).catch(err => {
+    errorDiv.style.color = '#e53e3e';
+    errorDiv.textContent = 'Lỗi: ' + err.message;
   });
 }
+
+// Bắt lỗi nếu Redirect quay lại gặp trục trặc
+auth.getRedirectResult().catch(err => {
+  const errorDiv = document.getElementById('login-error');
+  if(errorDiv) {
+    errorDiv.style.display = 'block';
+    errorDiv.style.color = '#e53e3e';
+    errorDiv.textContent = 'Lỗi đăng nhập: ' + err.message;
+  }
+});
 
 function logoutUser() { auth.signOut(); }
 
@@ -785,7 +754,7 @@ function updateCountdown() {
   else { el.textContent = 'Đã thi xong!'; sub.textContent = 'Chúc các con đạt kết quả tốt nhất'; }
 }
 
-// ===== TRANG HỌC SINH & QUẢN LÝ BTVN =====
+// ===== TRANG HỌC SINH & NỢ BTVN =====
 let currentType = 'private';
 function selectType(type) {
   currentType = type;
@@ -914,7 +883,7 @@ function bulkAttend(gIndex, gradeName) {
   save(); alert('✅ Đã điểm danh thành công!');
 }
 
-// ===== ATTENDANCE PAGE =====
+// ===== ĐIỂM DANH CÁ NHÂN =====
 function renderAttStudents() {
   const el = document.getElementById('att-student-list');
   if (!db.students.length) { el.innerHTML = `<div class="empty-state"><p>Thêm học sinh trước</p></div>`; return; }
@@ -1034,7 +1003,7 @@ function saveGrade() {
 }
 function deleteGrade(sid, gid) { if(!confirm('Xóa bài kiểm tra này?')) return; db.grades[sid] = db.grades[sid].filter(g => g.id !== gid); save(); renderGrades(); }
 
-// ===== TẠO PHIẾU VÀ TỰ ĐỘNG ZALO =====
+// ===== TẠO PHIẾU VÀ ZALO =====
 function handleQRUpload(event) {
   const file = event.target.files[0]; if (!file) return; 
   const reader = new FileReader(); 
@@ -1099,6 +1068,7 @@ function buildPhieuHTML(d) {
 function printPhieuFromModal() { printDoc(document.getElementById('modal-view-phieu-content').innerHTML); }
 function printPhieu() { printDoc(document.getElementById('phieu-display').innerHTML); }
 
+// HÀM IN FIX LỖI CRASH 
 function printDoc(html) {
   const win = window.open('', '_blank');
   let docHtml = '<!DOCTYPE html><html><head>';
@@ -1111,7 +1081,7 @@ function printDoc(html) {
   setTimeout(() => { win.print(); }, 600);
 }
 
-// ===== TÍNH NĂNG MỚI: MỞ MODAL ZALO TRƯỚC KHI COPY =====
+// ===== MỞ MODAL ZALO TRƯỚC KHI COPY =====
 function openZaloModal() {
   const sid = document.getElementById('phieu-student').value;
   if(!sid) return alert('Vui lòng chọn học sinh trước!');
@@ -1193,7 +1163,7 @@ function viewPhieu(id) {
 
 function deletePhieu(id) { db.phieus = db.phieus.filter(p => p.id !== id); save(); renderPhieuHistory(); }
 
-// ===== STATS PAGE =====
+// ===== TRANG THỐNG KÊ =====
 function renderStats() {
   const mode = document.getElementById('stats-mode').value;
   if (mode === 'year') { document.getElementById('stats-view-year').style.display = 'block'; document.getElementById('stats-view-month').style.display = 'none'; renderStatsYearly(); } 
