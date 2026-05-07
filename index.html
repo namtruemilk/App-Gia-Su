@@ -490,6 +490,53 @@ body.dark .redzone-item-reason { color: #fc8181; }
   .exam-cd-num{font-size:1.4rem;padding:10px 4px;}
   .doc-grid{grid-template-columns:1fr;}
 }
+
+/* =========================================
+   BẢN VÁ LỖI GIAO DIỆN VÀ TÙY CHỈNH THEME
+   ========================================= */
+
+/* 1. Ép 3 thẻ thống kê hiển thị cân đối trên 1 hàng ngang ở máy tính */
+@media(min-width: 641px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    .stats-grid .stat-card {
+        grid-column: auto !important; /* Ghi đè style ép full hàng của thẻ cuối */
+    }
+}
+
+/* 2. Hiển thị trọn vẹn số tiền, tự động xuống dòng không bị mất số */
+.stat-num, .stat-num-unpaid {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow: visible !important;
+    font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
+    line-height: 1.2 !important;
+}
+
+/* 3. Tăng cỡ chữ phần "Doanh thu trung bình / tháng" */
+div:has(> #avg-revenue-display),
+#avg-revenue-display,
+.sticky-note b {
+    font-size: 1.15rem !important;
+}
+
+/* 4. Sửa lỗi tràn màn hình ở phần Nhập điểm mới */
+.form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+}
+
+/* 5. Cập nhật giao diện Sticky Note sang tone Xanh dương */
+.sticky-note {
+    background: #e8f4fd !important;
+    border-left-color: #2b6cb0 !important;
+    color: #1a365d !important;
+}
+body.dark .sticky-note {
+    background: rgba(43, 108, 176, 0.15) !important;
+    border-left-color: #93c5fd !important;
+    color: #93c5fd !important;
+}
 </style>
 </head>
 <body>
@@ -1518,8 +1565,19 @@ function generateZaloMessageContent() {
   else if(hwStatus==='missing') hwText = 'Tuy nhiên bé còn thiếu một số bài tập về nhà, mong anh/chị nhắc nhở thêm ạ. ';
   else if(hwStatus==='none') hwText = 'Lưu ý: Bé chưa hoàn thành bài tập về nhà trong tháng này, rất mong anh/chị phối hợp nhắc nhở ạ. ';
   const comment = document.getElementById('phieu-comment').value.trim();
-  const commentText = comment ? `\n\n💬 Nhận xét của em về bé: "${comment}"` : '';
-  const message = `Dạ em chào anh/chị ạ! 🌟 Em gửi báo cáo học tập tháng ${monthNum}/${yearNum} của bé *${s.name}* ạ.\n\n📚 *Tháng này bé đi học ${sessions} buổi* (${p>0?`${p} buổi riêng`:''}${p>0&&g>0?', ':''}${g>0?`${g} buổi nhóm`:''}).\n\n📊 ${avgText}${hwText}\n\n💰 *Học phí tháng ${monthNum}: ${fmt(total)}đ* ${commentText}\n\nAnh/chị xem lại chi tiết và thanh toán học phí giúp em nhé ạ! 🙏\nEm cảm ơn anh/chị ạ! 😊`;
+  const commentText = comment ? `
+
+💬 Nhận xét của em về bé: "${comment}"` : '';
+  const message = `Dạ em chào anh/chị ạ! 🌟 Em gửi báo cáo học tập tháng ${monthNum}/${yearNum} của bé *${s.name}* ạ.
+
+📚 *Tháng này bé đi học ${sessions} buổi* (${p>0?`${p} buổi riêng`:''}${p>0&&g>0?', ':''}${g>0?`${g} buổi nhóm`:''}).
+
+📊 ${avgText}${hwText}
+
+💰 *Học phí tháng ${monthNum}: ${fmt(total)}đ* ${commentText}
+
+Anh/chị xem lại chi tiết và thanh toán học phí giúp em nhé ạ! 🙏
+Em cảm ơn anh/chị ạ! 😊`;
   document.getElementById('zalo-message-text').value = message;
   document.getElementById('zalo-copy-confirm').style.display = 'none';
 }
