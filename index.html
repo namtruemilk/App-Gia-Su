@@ -498,7 +498,7 @@ body.dark .redzone-item-reason { color: #fc8181; }
 /* 1. Ép 3 thẻ thống kê hiển thị cân đối trên 1 hàng ngang ở máy tính */
 @media(min-width: 641px) {
     .stats-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-columns: repeat(3, 1fr) !important;
     }
     .stats-grid .stat-card {
         grid-column: auto !important; /* Ghi đè style ép full hàng của thẻ cuối */
@@ -864,9 +864,9 @@ body.dark .sticky-note {
           <select id="stats-year" onchange="renderStatsYearly()" style="max-width:140px;"></select>
         </div>
         <div class="stats-grid" id="stats-year-grid"></div>
-        <div style="font-size:1rem;font-weight:800;color:var(--text-light);margin-bottom:8px;">
+        <div style="font-size:0.85rem;font-weight:700;color:var(--text-light);margin-bottom:8px;">
           📈 Biểu đồ doanh thu<br>
-          <span style="font-size:0.9rem;">Doanh thu trung bình / tháng: <b id="avg-revenue-display" style="color:var(--teal);">0đ</b></span>
+          <span style="font-size:0.78rem;">Doanh thu trung bình / tháng: <b id="avg-revenue-display" style="color:var(--teal);">0đ</b></span>
         </div>
         <div style="height:220px;"><canvas id="revenueChart"></canvas></div>
       </div>
@@ -1416,7 +1416,7 @@ function renderHome() {
     <div class="stat-card"><div class="stat-num">${fmt(totalFee)}đ</div><div class="stat-label">Doanh thu tháng ${monthNumber}</div></div>
     <div class="stat-card" style="border:2px solid var(--border);background:var(--bg);">
       <div class="stat-num-unpaid">${fmt(unpaidTotal)}đ</div>
-      <div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div>
+      <div class="stat-label stat-num-unpaid">Học phí chưa thanh toán</div>
     </div>`;
   const rec = db.students.slice(-5).reverse();
   document.getElementById('recent-students').innerHTML = rec.length ? rec.map(s => `
