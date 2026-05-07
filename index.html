@@ -498,7 +498,7 @@ body.dark .redzone-item-reason { color: #fc8181; }
 /* 1. Ép 3 thẻ thống kê hiển thị cân đối trên 1 hàng ngang ở máy tính */
 @media(min-width: 641px) {
     .stats-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-columns: repeat(4, 1fr) !important;
     }
     .stats-grid .stat-card {
         grid-column: auto !important; /* Ghi đè style ép full hàng của thẻ cuối */
@@ -1416,7 +1416,7 @@ function renderHome() {
     <div class="stat-card"><div class="stat-num">${fmt(totalFee)}đ</div><div class="stat-label">Doanh thu tháng ${monthNumber}</div></div>
     <div class="stat-card" style="border:2px solid var(--border);background:var(--bg);">
       <div class="stat-num-unpaid">${fmt(unpaidTotal)}đ</div>
-      <div class="stat-label stat-num-unpaid">Học phí chưa thanh toán</div>
+      <div class="stat-label" style="color:#e53e3e;">Học phí chưa thanh toán</div>
     </div>`;
   const rec = db.students.slice(-5).reverse();
   document.getElementById('recent-students').innerHTML = rec.length ? rec.map(s => `
